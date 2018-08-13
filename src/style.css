@@ -1,0 +1,28 @@
+GtkWindow {
+    background-color: magenta;
+}
+
+GtkButton {
+    background-image: none;
+}
+
+.btn {
+    font-family: DejaVu Sans;
+    font-style: normal;
+    /*font-weight: bold;*/
+    font-size: 15px;
+}
+
+.tooltip {
+    border-radius: 50%;
+    opacity: 0.5;
+    /*background: #000;*/
+    /*color: #fff;*/
+    border: 1px solid;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.tooltip:hover {
+    opacity: 1;
+}
