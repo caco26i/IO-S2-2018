@@ -1,13 +1,14 @@
 #include <gtk/gtk.h>
-#include <string.h>  
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 GtkBuilder      *builder;
 //Declaración de ventanas
-GtkWidget      *window, *about_window, *pending_window;
+GtkWidget      *window, *about_window, *pending_rutas_cortas, *pending_tba1, *pending_tba2, *pending_tba3, *pending_tba4;
 //Declaración de botones
 GtkWidget       *rutas_cortas_btn, *tba1_btn, *tba2_btn, *tba3_btn, *tba4_btn;
+//Declaración de tooltips
 GtkWidget       *tt_tba0, *tt_tba1, *tt_tba2, *tt_tba3, *tt_tba4;
 
 //Declaración de funciones
@@ -44,7 +45,11 @@ int main(int argc, char *argv[])
     gtk_widget_set_tooltip_text(tt_tba4, "Este algoritmo se encuentra en construcción");
 
     about_window = GTK_WIDGET(gtk_builder_get_object(builder, "about_window"));
-    pending_window = GTK_WIDGET(gtk_builder_get_object(builder, "pending_window"));
+    pending_rutas_cortas = GTK_WIDGET(gtk_builder_get_object(builder, "pending_rutas_cortas"));
+    pending_tba1 = GTK_WIDGET(gtk_builder_get_object(builder, "pending_tba1"));
+    pending_tba2 = GTK_WIDGET(gtk_builder_get_object(builder, "pending_tba2"));
+    pending_tba3 = GTK_WIDGET(gtk_builder_get_object(builder, "pending_tba3"));
+    pending_tba4 = GTK_WIDGET(gtk_builder_get_object(builder, "pending_tba4"));
     gtk_builder_connect_signals(builder, NULL);
 
     g_object_unref(builder);
@@ -80,10 +85,38 @@ void on_press_about()
 }
 
 // called when about menu button is clicked
-void on_press_pending_window()
+void on_press_pending_rutas_cortas()
 {
 	//about_window = create_about_window();
-	gtk_widget_show (pending_window);
+	gtk_widget_show (pending_rutas_cortas);
+}
+
+// called when about menu button is clicked
+void on_press_pending_tba1()
+{
+	//about_window = create_about_window();
+	gtk_widget_show (pending_tba1);
+}
+
+// called when about menu button is clicked
+void on_press_pending_tba2()
+{
+	//about_window = create_about_window();
+	gtk_widget_show (pending_tba2);
+}
+
+// called when about menu button is clicked
+void on_press_pending_tba3()
+{
+	//about_window = create_about_window();
+	gtk_widget_show (pending_tba3);
+}
+
+// called when about menu button is clicked
+void on_press_pending_tba4()
+{
+	//about_window = create_about_window();
+	gtk_widget_show (pending_tba4);
 }
 
 // called when window is closed
@@ -99,7 +132,31 @@ void on_about_window_destroy()
 }
 
 // called when window is closed
-void on_pending_window_destroy()
+void on_pending_rutas_cortas_destroy()
 {
-    gtk_widget_hide_on_delete(pending_window);
+    gtk_widget_hide_on_delete(pending_rutas_cortas);
+}
+
+// called when window is closed
+void on_pending_tba1_destroy()
+{
+    gtk_widget_hide_on_delete(pending_tba1);
+}
+
+// called when window is closed
+void on_pending_tba2_destroy()
+{
+    gtk_widget_hide_on_delete(pending_tba2);
+}
+
+// called when window is closed
+void on_pending_tba3_destroy()
+{
+    gtk_widget_hide_on_delete(pending_tba3);
+}
+
+// called when window is closed
+void on_pending_tba4_destroy()
+{
+    gtk_widget_hide_on_delete(pending_tba4);
 }
