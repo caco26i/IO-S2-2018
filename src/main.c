@@ -87,36 +87,13 @@ void on_press_about()
 // called when about menu button is clicked
 void on_press_pending_rutas_cortas()
 {
-	//about_window = create_about_window();
-	gtk_widget_show (pending_rutas_cortas);
+	system("./pending &");
 }
 
 // called when about menu button is clicked
-void on_press_pending_tba1()
+void on_press_pending_open()
 {
-	//about_window = create_about_window();
-	gtk_widget_show (pending_tba1);
-}
-
-// called when about menu button is clicked
-void on_press_pending_tba2()
-{
-	//about_window = create_about_window();
-	gtk_widget_show (pending_tba2);
-}
-
-// called when about menu button is clicked
-void on_press_pending_tba3()
-{
-	//about_window = create_about_window();
-	gtk_widget_show (pending_tba3);
-}
-
-// called when about menu button is clicked
-void on_press_pending_tba4()
-{
-	//about_window = create_about_window();
-	gtk_widget_show (pending_tba4);
+	system("./pending &");
 }
 
 // called when window is closed
@@ -129,34 +106,4 @@ void on_window_main_destroy()
 void on_about_window_destroy()
 {
     gtk_widget_hide_on_delete(about_window);
-}
-
-// called when window is closed
-void on_pending_rutas_cortas_destroy()
-{
-    gtk_widget_hide_on_delete(pending_rutas_cortas);
-}
-
-// called when window is closed
-void on_pending_tba1_destroy()
-{
-    gtk_widget_hide_on_delete(pending_tba1);
-}
-
-// called when window is closed
-void on_pending_tba2_destroy()
-{
-    gtk_widget_hide_on_delete(pending_tba2);
-}
-
-// called when window is closed
-void on_pending_tba3_destroy()
-{
-    gtk_widget_hide_on_delete(pending_tba3);
-}
-
-// called when window is closed
-void on_pending_tba4_destroy()
-{
-    gtk_widget_hide_on_delete(pending_tba4);
 }
