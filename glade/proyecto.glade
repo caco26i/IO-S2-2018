@@ -100,7 +100,7 @@ Dinámica</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="button-press-event" handler="on_press_pending_open" swapped="no"/>
+            <signal name="button-press-event" handler="on_press_floyd_open" swapped="no"/>
             <style>
               <class name="btn"/>
             </style>

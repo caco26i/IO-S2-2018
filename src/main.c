@@ -85,9 +85,9 @@ void on_press_about()
 }
 
 // called when about menu button is clicked
-void on_press_pending_rutas_cortas()
+void on_press_floyd_open()
 {
-	system("./pending &");
+	system("./floyd &");
 }
 
 // called when about menu button is clicked
