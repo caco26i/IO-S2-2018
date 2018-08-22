@@ -26,3 +26,11 @@ GtkButton {
 .tooltip:hover {
     opacity: 1;
 }
+
+#frame{
+    background-image: url("graph.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+
+}
