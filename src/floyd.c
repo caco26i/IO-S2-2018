@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
     GtkWidget *window;
 
 
-    int test[] = {INF, 5, INF, 10, INF, INF, 3, INF, INF, INF, INF, INF, INF, INF, INF, INF, INF, INF, INF, INF, INF,
+    int test[] = {INF, 5, INF, 10, 3, 4, INF, INF, INF, INF, INF, INF, INF, INF, INF, INF, INF, INF, INF, INF, INF,
                   INF, INF, INF, INF};
 
     k = 0;
