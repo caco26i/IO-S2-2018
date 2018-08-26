@@ -1,17 +1,25 @@
 digraph G {
+A
 A -> B [ label="5" ];
 A -> D [ label="10" ];
 A -> G [ label="3" ];
-C -> B [ label="5" ];
-C -> D [ label="10" ];
-C -> G [ label="3" ];
-E -> B [ label="5" ];
-E -> D [ label="10" ];
-E -> G [ label="3" ];
-G -> B [ label="5" ];
-G -> D [ label="10" ];
-G -> G [ label="3" ];
-I -> B [ label="5" ];
-I -> D [ label="10" ];
-I -> G [ label="3" ];
+B
+B -> A [ label="5" ];
+B -> C [ label="10" ];
+B -> F [ label="3" ];
+C
+C -> B [ label="10" ];
+C -> E [ label="3" ];
+D
+D -> A [ label="10" ];
+D -> D [ label="3" ];
+E
+E -> C [ label="3" ];
+F
+F -> B [ label="3" ];
+G
+G -> A [ label="3" ];
+H
+I
+J
 }
