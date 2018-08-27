@@ -111,8 +111,8 @@ Dinámica</property>
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="tba1">
-            <property name="label" translatable="yes">TBA</property>
+          <object class="GtkButton" id="floyd">
+            <property name="label" translatable="yes">Floyd</property>
             <property name="width_request">95</property>
             <property name="height_request">60</property>
             <property name="visible">True</property>

@@ -92,11 +92,12 @@ void generar_grafo() {
     fichero = fopen("test.dot", "w+");
     fputs("digraph G {\n", fichero);
 
-    for (i = 0; i < V; i++)
+    for (i = 0; i < V; i++){
+        fprintf(fichero, "%s\n", names[i]);
         for (j = 0; j < V; j++)
             if (graph[i][j] != INF)
                 fprintf(fichero, "%s -> %s [ label=\"%d\" ];\n", names[i], names[j], graph[i][j]);
-
+    }
     fputs("}", fichero);
     fclose(fichero);
     printf("Proceso completado");
@@ -119,7 +120,7 @@ int main(int argc, char *argv[]) {
     //Se inicializa el grafo en infinito
     for (i = 0; i < V; i++) {
         for (j = 0; j < V; j++) {
-            graph[i][j] = test[k++ % 20];
+            graph[i][j] = test[(i + j) % 20];
         }
     }
 
@@ -151,7 +152,3 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-
-
-
-
