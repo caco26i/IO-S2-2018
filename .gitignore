@@ -1,3 +1,5 @@
 *.o
 proyecto
 pending
+floyd
+test.dot
