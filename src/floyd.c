@@ -148,14 +148,12 @@ int rutas(char *nodo_inicio, char *nodo_final) {
     }
 }
 
-
-
 void recorroRutas() {
     int i;
     printf("flag: %d\n", flag);
-    for (i = 0; i < flag; i++) {
-        printf("%d\n", lista_rutas[i]);
-        printf(": %s\n", names[lista_rutas[i]]);
+    for (i = 0; i <= flag; i++) {
+        printf("lista: %d\n", lista_rutas[i]);
+        printf("nombre: %s\n", names[lista_rutas[i]]);
     }
 }
 
