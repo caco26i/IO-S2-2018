@@ -35,6 +35,8 @@ void myCSS(void);
 
 void floyd(void);
 
+void recorroRutas(void);
+
 int route[V][V];
 int graph[V][V];
 GtkWidget *graph_nodes[V][V];
@@ -109,6 +111,8 @@ void rutasAux(){
     entry_final = gtk_entry_get_text (GTK_ENTRY(final));
 
     rutas((char *) entry_inicio, (char*) entry_final);
+    printf("\n");
+    recorroRutas();
 
 }
 
@@ -134,13 +138,24 @@ int rutas(char *nodo_inicio, char *nodo_final) {
     if (route[pos_inicio][pos_final] == 0) {
         lista_rutas[flag] = route[pos_inicio][pos_final];
         printf("LISTA:%d\n", lista_rutas[flag]);
-        return 0;
+        return flag;
         //return route[pos_inicio][pos_final];
     } else {
         pos_intermedia = route[pos_inicio][pos_final];
         lista_rutas[flag] = route[pos_inicio][pos_final];
         printf("LISTA:%d\n", lista_rutas[flag]);
         rutas(names[pos_intermedia - 1], names[pos_final]);
+    }
+}
+
+
+
+void recorroRutas() {
+    int i;
+    printf("flag: %d\n", flag);
+    for (i = 0; i < flag; i++) {
+        printf("%d\n", lista_rutas[i]);
+        printf(": %s\n", names[lista_rutas[i]]);
     }
 }
 
