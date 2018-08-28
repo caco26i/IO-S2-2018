@@ -8,13 +8,14 @@
 #define INF 999999999
 
 #define V 10
-
+GtkWidget *inicio;
+GtkWidget *final;
 typedef struct {
     GtkWidget *w_sbtn_quantity;
     GtkWidget *w_grid_nodes;
     GtkWidget *w_midgrid_nodes;
-    GtkWidget *inicio;
-    GtkWidget *final;
+    //GtkWidget *inicio;
+    //GtkWidget *final;
 } app_widgets;
 
 //GtkWidget *gtk_entry_new (void);
@@ -94,10 +95,21 @@ void floyd() {
 
     // Print the shortest distance matrix
     printSolution();
-    const gchar *gtk_entry_get_text (GtkEntry *inicio);
-    const gchar *gtk_entry_get_text (GtkEntry *final);
 
-    rutas(, "E");
+    //rutas("B", "E");
+}
+
+void rutasAux(){
+    printf("Prueba a ver \n");
+    const gchar *entry_inicio;
+    const gchar *entry_final;
+
+    //printf("Lo que esta escrito es!: %s\n", gtk_entry_get_text (final));
+    entry_inicio = gtk_entry_get_text(inicio);
+    entry_final = gtk_entry_get_text(final);
+    //printf("Erick tiene!: %s\n", ent);
+
+    rutas(entry_inicio, entry_final);
 }
 
 int rutas(char *nodo_inicio, char *nodo_final) {
@@ -426,8 +438,6 @@ int main(int argc, char *argv[]) {
 
     floyd();
 
-
-
     gtk_init(&argc, &argv);
     myCSS();
 
@@ -436,18 +446,19 @@ int main(int argc, char *argv[]) {
 
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
 
+    inicio = GTK_WIDGET(gtk_builder_get_object(builder, "inicio"));
+    final = GTK_WIDGET(gtk_builder_get_object(builder, "final"));
     widgets->w_sbtn_quantity = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_quantity"));
     widgets->w_grid_nodes = GTK_WIDGET(gtk_builder_get_object(builder, "cont_grid"));
     widgets->w_midgrid_nodes = GTK_WIDGET(gtk_builder_get_object(builder, "cont_tablas_intermedias"));
     widgets->w_midgrid_nodes = GTK_WIDGET(gtk_builder_get_object(builder, "cont_tablas_intermedias"));
-
 
     gtk_builder_connect_signals(builder, widgets);
     g_object_unref(builder);
 
     mainbox = gtk_grid_new();
     midbox = gtk_grid_new();
-    inicio = gtk_entry_new();
+    //inicio = gtk_entry_new();
 
     gtk_widget_set_halign(mainbox, GTK_ALIGN_CENTER);
 

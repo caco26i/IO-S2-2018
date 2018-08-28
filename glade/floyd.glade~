@@ -451,6 +451,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="inicio">
+                <property name="name">inicio</property>
                 <property name="width_request">50</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
@@ -465,6 +466,7 @@
             </child>
             <child>
               <object class="GtkEntry" id="final">
+                <property name="name">final</property>
                 <property name="width_request">50</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
