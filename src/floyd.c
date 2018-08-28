@@ -80,7 +80,7 @@ void floyd() {
             for (j = 0; j < V; j++) {
                 if (dist[i][k] + dist[k][j] < dist[i][j]){
                     tablas_intermedias[k][i][j] = dist[i][j] = dist[i][k] + dist[k][j];
-                    route[i][j] = k + 1;
+                    route[i][j] = k;
                   } else
                     tablas_intermedias[k][i][j] = dist[i][j];
             }
@@ -97,7 +97,7 @@ void rutas(char *nodo_inicio, char *nodo_final) {
     for (i = 0; i < cantidad_nodos; i++) {
         if (nodo_inicio == names[i]) {
             pos_inicio = i;
-        } else if (nodo_final == names[i]) {
+        }if (nodo_final == names[i]) {
             pos_final = i;
         } else
           printf("no está\n");
@@ -162,7 +162,14 @@ void imprimirTablasIntermedias(){
 
     int i, j, iaux, jaux, k;
 
-    gtk_widget_destroy (GTK_WIDGET(midbox));
+
+    GList *children, *iter;
+
+    children = gtk_container_get_children(GTK_CONTAINER(widgets->w_midgrid_nodes));
+    for(iter = children; iter != NULL; iter = g_list_next(iter))
+        gtk_widget_destroy(GTK_WIDGET(iter->data));
+    g_list_free(children);
+
     midbox = gtk_grid_new();
     gtk_widget_set_halign(midbox, GTK_ALIGN_CENTER);
 
@@ -207,6 +214,10 @@ void imprimirTablasIntermedias(){
                     sprintf(buffer, " %d ", tablas_intermedias[k][i][j]);
                     entry= gtk_label_new(buffer);
                 }
+
+                GtkStyleContext *context;
+                context = gtk_widget_get_style_context(entry);
+                gtk_style_context_add_class(context,"numero");
 
                 if(k>0 && tablas_intermedias[k-1][i][j] != tablas_intermedias[k][i][j]){
                     GtkStyleContext *context;

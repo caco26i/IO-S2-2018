@@ -43,3 +43,7 @@ GtkButton {
 .diferente{
     color: darkgreen;
 }
+
+.numero {
+    font-size: 18px;
+}
