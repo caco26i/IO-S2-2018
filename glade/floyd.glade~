@@ -227,57 +227,102 @@
           </packing>
         </child>
         <child>
-          <object class="GtkFixed">
+          <object class="GtkScrolledWindow">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can_focus">True</property>
+            <property name="shadow_type">in</property>
             <child>
-              <object class="GtkLabel">
-                <property name="width_request">100</property>
-                <property name="height_request">80</property>
+              <object class="GtkViewport">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Tablas Intermedias</property>
-                <property name="justify">center</property>
-                <attributes>
-                  <attribute name="font-desc" value="Lato Ultra-Bold Italic 24"/>
-                  <attribute name="foreground" value="#000000000000"/>
-                </attributes>
-              </object>
-              <packing>
-                <property name="x">15</property>
-                <property name="y">15</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton">
-                <property name="label" translatable="yes">Mostrar tablas</property>
-                <property name="width_request">100</property>
-                <property name="height_request">60</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <signal name="clicked" handler="imprimirTablasIntermedias" swapped="no"/>
-              </object>
-              <packing>
-                <property name="x">300</property>
-                <property name="y">25</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkBox" id="cont_tablas_intermedias">
-                <property name="name">cont_grid</property>
-                <property name="width_request">1000</property>
-                <property name="height_request">500</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="orientation">vertical</property>
                 <child>
-                  <placeholder/>
+                  <object class="GtkFixed">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="width_request">100</property>
+                        <property name="height_request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="width_request">100</property>
+                                <property name="height_request">80</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="margin_left">15</property>
+                                <property name="margin_right">15</property>
+                                <property name="margin_top">15</property>
+                                <property name="margin_bottom">15</property>
+                                <property name="label" translatable="yes">Tablas Intermedias</property>
+                                <property name="justify">center</property>
+                                <attributes>
+                                  <attribute name="font-desc" value="Lato Ultra-Bold Italic 24"/>
+                                  <attribute name="foreground" value="#000000000000"/>
+                                </attributes>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton">
+                                <property name="label" translatable="yes">Mostrar tablas</property>
+                                <property name="width_request">100</property>
+                                <property name="height_request">60</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="margin_left">15</property>
+                                <property name="margin_right">15</property>
+                                <property name="margin_top">15</property>
+                                <property name="margin_bottom">15</property>
+                                <signal name="clicked" handler="imprimirTablasIntermedias" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="cont_tablas_intermedias">
+                            <property name="name">cont_tablas_intermedias</property>
+                            <property name="width_request">1000</property>
+                            <property name="height_request">475</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
                 </child>
               </object>
-              <packing>
-                <property name="y">100</property>
-              </packing>
             </child>
           </object>
           <packing>
