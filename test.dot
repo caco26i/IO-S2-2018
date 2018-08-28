@@ -1,18 +1,20 @@
 digraph G {
 "A"
-"A" -> "B" [ label="123" ];
+"A" -> "B" [ label="6" ];
+"A" -> "D" [ label="4" ];
+"A" -> "E" [ label="7" ];
 "B"
+"B" -> "A" [ label="9" ];
+"B" -> "C" [ label="7" ];
 "C"
-"C" -> "A" [ label="123" ];
-"C" -> "D" [ label="34" ];
+"C" -> "B" [ label="5" ];
+"C" -> "E" [ label="14" ];
 "D"
-"D" -> "A" [ label="1" ];
-"D" -> "J" [ label="3" ];
+"D" -> "A" [ label="8" ];
+"D" -> "B" [ label="1" ];
+"D" -> "E" [ label="15" ];
 "E"
-"F"
-"G"
-"H"
-"I"
-"J"
-"J" -> "A" [ label="123" ];
+"E" -> "A" [ label="2" ];
+"E" -> "C" [ label="2" ];
+"E" -> "D" [ label="19" ];
 }

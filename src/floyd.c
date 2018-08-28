@@ -12,8 +12,10 @@
 typedef struct {
     GtkWidget *w_sbtn_quantity;
     GtkWidget *w_grid_nodes;
+    GtkWidget *w_midgrid_nodes;
 } app_widgets;
 
+int tablas_intermedias[V][V][V];
 
 int cantidad_nodos;
 
@@ -30,9 +32,12 @@ char names[V][25];
 GtkWidget *names_nodes_r[V];
 GtkWidget *names_nodes_c[V];
 
+
+app_widgets *widgets;
+
 GtkWidget *frame, *window;
 GtkBuilder *builder;
-GtkWidget *mainbox;
+GtkWidget *mainbox, *midbox;
 
 GtkCssProvider *provider;
 
@@ -64,13 +69,16 @@ void floyd() {
     /* Initialize the solution matrix same as input graph matrix */
     for (i = 0; i < V; i++)
         for (j = 0; j < V; j++)
-            dist[i][j] = graph[i][j];
+            tablas_intermedias[0][i][j] = dist[i][j] = graph[i][j];
 
     for (k = 0; k < V; k++)
         for (i = 0; i < V; i++)
-            for (j = 0; j < V; j++)
+            for (j = 0; j < V; j++) {
                 if (dist[i][k] + dist[k][j] < dist[i][j])
-                    dist[i][j] = dist[i][k] + dist[k][j];
+                    tablas_intermedias[k][i][j] = dist[i][j] = dist[i][k] + dist[k][j];
+                else
+                    tablas_intermedias[k][i][j] = dist[i][j];
+            }
 
     // Print the shortest distance matrix
     printSolution();
@@ -78,11 +86,12 @@ void floyd() {
 
 /* A utility function to print solution */
 void printSolution() {
-    printf("The following matrix shows the shortest distances"
-           " between every pair of vertices \n");
-    for (int i = 0; i < cantidad_nodos; i++) {
+    int i, j, k;
+
+    printf("Distancia minima entre cada nodo\n");
+    for (i = 0; i < cantidad_nodos; i++) {
         printf("%7s", names[i]);
-        for (int j = 0; j < cantidad_nodos; j++) {
+        for (j = 0; j < cantidad_nodos; j++) {
             if (dist[i][j] == INF)
                 printf("%7s", "INF");
             else
@@ -90,8 +99,53 @@ void printSolution() {
         }
         printf("\n");
     }
-}
 
+    for (int k = 0; k < cantidad_nodos; k++) {
+        printf("\nTABLA D(%d)\n", k);
+
+        for (i = 0; i < cantidad_nodos; i++) {
+            printf("%7s", names[i]);
+            for (j = 0; j < cantidad_nodos; j++) {
+                if (tablas_intermedias[k][i][j] == INF)
+                    printf("%7s", "INF");
+                else
+                    printf("%7d", tablas_intermedias[k][i][j]);
+            }
+            printf("\n");
+        }
+    }
+}
+void imprimirTablasIntermedias(){
+    int i, j, k;
+
+    gtk_widget_destroy (midbox);
+    midbox = gtk_grid_new();
+
+    for (int k = 0; k < cantidad_nodos; k++) {
+        printf("\nTABLA D(%d)\n", k);
+
+        char buffer[25];
+
+        for (i = k * 0 + 2; i < V; i++) {
+            for (j = (k * 2) % 2 + 2; j < V; j++) {
+                GtkWidget *label;
+                if (tablas_intermedias[k][i][j] == INF)
+                    label = gtk_label_new("INF");
+                else
+                    sprintf(buffer, "%d", tablas_intermedias[k][i][j]);
+                    label = gtk_label_new(buffer);
+
+                gtk_widget_set_halign(label, GTK_ALIGN_CENTER);
+                gtk_grid_attach(GTK_GRID(midbox), label, i+1, j+1, 1, 1);
+
+            }
+        }
+    }
+
+    gtk_container_add(GTK_CONTAINER(widgets->w_midgrid_nodes), mainbox);
+
+
+}
 
 void printGraph() {
     printf("The following matrix shows the shortest distances"
@@ -107,6 +161,7 @@ void printGraph() {
         printf("\n");
     }
 }
+
 void generar_grafo() {
     int i, j;
 
@@ -218,7 +273,7 @@ void on_btn_cambiar_cant_nodos_clicked(GtkButton *buttonn, app_widgets *app_wdgt
 int main(int argc, char *argv[]) {
     int i, j, k;
 
-    app_widgets *widgets = g_slice_new(app_widgets);
+    widgets = g_slice_new(app_widgets);
 
     cantidad_nodos = V;
 
@@ -230,7 +285,7 @@ int main(int argc, char *argv[]) {
     //Se inicializa el grafo en infinito
     for (i = 0; i < V; i++) {
         for (j = 0; j < V; j++) {
-            graph[i][j] = INF;//test[(i + j) % 20];
+            graph[i][j] = (i == j) ? 0 : INF;
         }
     }
 
@@ -239,6 +294,14 @@ int main(int argc, char *argv[]) {
     for (i = 'A'; i < 'A' + V; i++) {
         char str[25] = {i, '\0'};
         strcpy(names[j++], str);
+    }
+
+    for (k = 0; k < V; k++) {
+        for (i = 0; i < V; i++) {
+            for (j = 0; j < V; j++) {
+                tablas_intermedias[k][i][j] = INF;
+            }
+        }
     }
 
     generar_grafo();
@@ -256,6 +319,7 @@ int main(int argc, char *argv[]) {
 
     widgets->w_sbtn_quantity = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_quantity"));
     widgets->w_grid_nodes = GTK_WIDGET(gtk_builder_get_object(builder, "cont_grid"));
+    widgets->w_midgrid_nodes = GTK_WIDGET(gtk_builder_get_object(builder, "cont_tablas_intermedias"));
 
 
     gtk_builder_connect_signals(builder, widgets);
