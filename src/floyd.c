@@ -18,13 +18,17 @@ typedef struct {
 int tablas_intermedias[V][V][V];
 
 int cantidad_nodos;
+char *nodo_inicio, *nodo_final;
 
 void printSolution(void);
+
+void rutas(char *nodo_inicio, char *nodo_final);
 
 void myCSS(void);
 
 void floyd(void);
 
+int route[V][V];
 int graph[V][V];
 GtkWidget *graph_nodes[V][V];
 int dist[V][V];
@@ -74,14 +78,38 @@ void floyd() {
     for (k = 0; k < V; k++)
         for (i = 0; i < V; i++)
             for (j = 0; j < V; j++) {
-                if (dist[i][k] + dist[k][j] < dist[i][j])
+                if (dist[i][k] + dist[k][j] < dist[i][j]){
                     tablas_intermedias[k][i][j] = dist[i][j] = dist[i][k] + dist[k][j];
-                else
+                    route[i][j] = k + 1;
+                  } else
                     tablas_intermedias[k][i][j] = dist[i][j];
             }
 
     // Print the shortest distance matrix
     printSolution();
+    rutas("A", "E");
+}
+
+void rutas(char *nodo_inicio, char *nodo_final) {
+    int pos_inicio, pos_final, pos_intermedia, i;
+
+    printf("Ruta óptima\n");
+    for (i = 0; i < cantidad_nodos; i++) {
+        if (nodo_inicio == names[i]) {
+            pos_inicio = i;
+        } else if (nodo_final == names[i]) {
+            pos_final = i;
+        } else
+          printf("no está\n");
+    }
+
+    if (route[pos_inicio][pos_final] == 0) {
+        printf("%d\n", route[pos_inicio][pos_final]);
+    } else {
+      pos_intermedia = route[pos_inicio][pos_final];
+      rutas(names[pos_intermedia], names[pos_final]);
+    }
+    printf("\n");
 }
 
 /* A utility function to print solution */
@@ -99,6 +127,19 @@ void printSolution() {
         }
         printf("\n");
     }
+
+    printf("\n");
+
+    printf("Tabla de rutas\n");
+    for (i = 0; i < cantidad_nodos; i++) {
+        printf("%7s", names[i]);
+        for (j = 0; j < cantidad_nodos; j++) {
+            printf("%7d", route[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\n");
 
     for (int k = 0; k < cantidad_nodos; k++) {
         printf("\nTABLA D(%d)\n", k);
@@ -346,6 +387,8 @@ int main(int argc, char *argv[]) {
 
     floyd();
 
+
+
     gtk_init(&argc, &argv);
     myCSS();
 
@@ -415,4 +458,3 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-
