@@ -1,9 +1,18 @@
 digraph G {
-A -> B [ label="5" ];
-A -> D [ label="10" ];
-A -> E [ label="3" ];
-A -> F [ label="4" ];
-C -> B [ label="5" ];
-C -> D [ label="10" ];
-C -> E [ label="3" ];
+"A"
+"A" -> "B" [ label="123" ];
+"B"
+"C"
+"C" -> "A" [ label="123" ];
+"C" -> "D" [ label="34" ];
+"D"
+"D" -> "A" [ label="1" ];
+"D" -> "J" [ label="3" ];
+"E"
+"F"
+"G"
+"H"
+"I"
+"J"
+"J" -> "A" [ label="123" ];
 }
