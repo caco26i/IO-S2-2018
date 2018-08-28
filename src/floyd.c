@@ -156,36 +156,73 @@ void printSolution() {
         }
     }
 }
+
 void imprimirTablasIntermedias(){
-    int i, j, k;
+    floyd();
 
-    gtk_widget_destroy (midbox);
+    int i, j, iaux, jaux, k;
+
+    gtk_widget_destroy (GTK_WIDGET(midbox));
     midbox = gtk_grid_new();
+    gtk_widget_set_halign(midbox, GTK_ALIGN_CENTER);
 
+    char buffer[25];
+    jaux = 0;
     for (int k = 0; k < cantidad_nodos; k++) {
-        printf("\nTABLA D(%d)\n", k);
 
-        char buffer[25];
+        sprintf(buffer, "TABLA D(%d)", k); // modified to append string
 
-        for (i = k * 0 + 2; i < V; i++) {
-            for (j = (k * 2) % 2 + 2; j < V; j++) {
-                GtkWidget *label;
+        GtkWidget *entry = gtk_label_new(buffer);
+        gtk_grid_attach(GTK_GRID(midbox), entry, 0, i+2, 1, 1);
+
+
+        GtkStyleContext *context;
+        context = gtk_widget_get_style_context(entry);
+        gtk_style_context_add_class(context,"title_table");
+
+
+        gtk_container_add(GTK_CONTAINER(widgets->w_midgrid_nodes), midbox);
+
+        midbox = gtk_grid_new();
+        gtk_widget_set_halign(midbox, GTK_ALIGN_CENTER);
+
+        for (i = 0; i < cantidad_nodos; i++) {
+            GtkWidget *entry = gtk_label_new(names[i]);
+            gtk_grid_attach(GTK_GRID(midbox), entry, 0, i+1, 1, 1);
+
+            entry = gtk_label_new(names[i]);
+            gtk_grid_attach(GTK_GRID(midbox), entry, i+1, 0, 1, 1);
+        }
+
+        for (i = 0; i < cantidad_nodos; i++) {
+            for (j = 0; j < cantidad_nodos; j++) {
+                int nj = j;
+
+                GtkWidget *entry;
+
+                graph_nodes[i][j] = entry;
                 if (tablas_intermedias[k][i][j] == INF)
-                    label = gtk_label_new("INF");
-                else
-                    sprintf(buffer, "%d", tablas_intermedias[k][i][j]);
-                    label = gtk_label_new(buffer);
+                    entry= gtk_label_new(" INF ");
+                else {
+                    sprintf(buffer, " %d ", tablas_intermedias[k][i][j]);
+                    entry= gtk_label_new(buffer);
+                }
 
-                gtk_widget_set_halign(label, GTK_ALIGN_CENTER);
-                gtk_grid_attach(GTK_GRID(midbox), label, i+1, j+1, 1, 1);
+                if(k>0 && tablas_intermedias[k-1][i][j] != tablas_intermedias[k][i][j]){
+                    GtkStyleContext *context;
+                    context = gtk_widget_get_style_context(entry);
+                    gtk_style_context_add_class(context,"diferente");
+                }
 
+                gtk_grid_attach(GTK_GRID(midbox), entry, i+1, j+1, 1, 1);
             }
         }
+
+        gtk_container_add(GTK_CONTAINER(widgets->w_midgrid_nodes), midbox);
+
     }
 
-    gtk_container_add(GTK_CONTAINER(widgets->w_midgrid_nodes), mainbox);
-
-
+    gtk_widget_show_all(widgets->w_midgrid_nodes);
 }
 
 void printGraph() {
@@ -369,6 +406,8 @@ int main(int argc, char *argv[]) {
     g_object_unref(builder);
 
     mainbox = gtk_grid_new();
+    midbox = gtk_grid_new();
+
     gtk_widget_set_halign(mainbox, GTK_ALIGN_CENTER);
 
 
@@ -405,7 +444,6 @@ int main(int argc, char *argv[]) {
 
             g_signal_connect(entry, "changed",
                              G_CALLBACK(icon_pressed_node), NULL);
-
         }
     }
 

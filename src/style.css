@@ -32,5 +32,14 @@ GtkButton {
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
+}
 
+.title_table{
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 20px;
+}
+
+.diferente{
+    color: darkgreen;
 }
