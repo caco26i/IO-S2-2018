@@ -1,12 +1,8 @@
 digraph G {
 "A"
+"A" -> "B" [ label="3434" ];
+"A" -> "C" [ label="4" ];
 "B"
 "C"
-"D"
-"E"
-"F"
-"G"
-"H"
-"I"
-"J"
+"C" -> "B" [ label="2" ];
 }

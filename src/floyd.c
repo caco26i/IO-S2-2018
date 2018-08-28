@@ -8,7 +8,7 @@
 #define INF 999999999
 
 #define V 10
-GtkWidget *inicio;
+GtkWidget *iniciol;
 GtkWidget *final;
 typedef struct {
     GtkWidget *w_sbtn_quantity;
@@ -96,20 +96,20 @@ void floyd() {
     // Print the shortest distance matrix
     printSolution();
 
-    //rutas("B", "E");
+    //rutas("A", "B");
 }
 
 void rutasAux(){
+    floyd();
     printf("Prueba a ver \n");
     const gchar *entry_inicio;
     const gchar *entry_final;
 
-    //printf("Lo que esta escrito es!: %s\n", gtk_entry_get_text (final));
-    entry_inicio = gtk_entry_get_text(inicio);
-    entry_final = gtk_entry_get_text(final);
-    //printf("Erick tiene!: %s\n", ent);
+    entry_inicio = gtk_entry_get_text (GTK_ENTRY(iniciol));
+    entry_final = gtk_entry_get_text (GTK_ENTRY(final));
 
-    rutas(entry_inicio, entry_final);
+    rutas((char *) entry_inicio, (char*) entry_final);
+
 }
 
 int rutas(char *nodo_inicio, char *nodo_final) {
@@ -133,11 +133,13 @@ int rutas(char *nodo_inicio, char *nodo_final) {
 
     if (route[pos_inicio][pos_final] == 0) {
         lista_rutas[flag] = route[pos_inicio][pos_final];
-        return route[pos_inicio][pos_final];
+        printf("LISTA:%d\n", lista_rutas[flag]);
+        return 0;
+        //return route[pos_inicio][pos_final];
     } else {
         pos_intermedia = route[pos_inicio][pos_final];
         lista_rutas[flag] = route[pos_inicio][pos_final];
-
+        printf("LISTA:%d\n", lista_rutas[flag]);
         rutas(names[pos_intermedia - 1], names[pos_final]);
     }
 }
@@ -446,7 +448,7 @@ int main(int argc, char *argv[]) {
 
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
 
-    inicio = GTK_WIDGET(gtk_builder_get_object(builder, "inicio"));
+    iniciol = GTK_WIDGET(gtk_builder_get_object(builder, "inicio"));
     final = GTK_WIDGET(gtk_builder_get_object(builder, "final"));
     widgets->w_sbtn_quantity = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_quantity"));
     widgets->w_grid_nodes = GTK_WIDGET(gtk_builder_get_object(builder, "cont_grid"));
