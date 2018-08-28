@@ -13,16 +13,22 @@ typedef struct {
     GtkWidget *w_sbtn_quantity;
     GtkWidget *w_grid_nodes;
     GtkWidget *w_midgrid_nodes;
+    GtkWidget *inicio;
+    GtkWidget *final;
 } app_widgets;
+
+//GtkWidget *gtk_entry_new (void);
+
 
 int tablas_intermedias[V][V][V];
 
 int cantidad_nodos;
+int flag = -1;
 char *nodo_inicio, *nodo_final;
 
 void printSolution(void);
 
-void rutas(char *nodo_inicio, char *nodo_final);
+int rutas(char *nodo_inicio, char *nodo_final);
 
 void myCSS(void);
 
@@ -33,13 +39,14 @@ int graph[V][V];
 GtkWidget *graph_nodes[V][V];
 int dist[V][V];
 char names[V][25];
+char lista_rutas[V];
 GtkWidget *names_nodes_r[V];
 GtkWidget *names_nodes_c[V];
 
 
 app_widgets *widgets;
 
-GtkWidget *frame, *window;
+GtkWidget *frame, *window, *frame_rutas;
 GtkBuilder *builder;
 GtkWidget *mainbox, *midbox;
 
@@ -80,36 +87,47 @@ void floyd() {
             for (j = 0; j < V; j++) {
                 if (dist[i][k] + dist[k][j] < dist[i][j]){
                     tablas_intermedias[k][i][j] = dist[i][j] = dist[i][k] + dist[k][j];
-                    route[i][j] = k;
+                    route[i][j] = k + 1;
                   } else
                     tablas_intermedias[k][i][j] = dist[i][j];
             }
 
     // Print the shortest distance matrix
     printSolution();
-    rutas("A", "E");
+    const gchar *gtk_entry_get_text (GtkEntry *inicio);
+    const gchar *gtk_entry_get_text (GtkEntry *final);
+
+    rutas(, "E");
 }
 
-void rutas(char *nodo_inicio, char *nodo_final) {
+int rutas(char *nodo_inicio, char *nodo_final) {
     int pos_inicio, pos_final, pos_intermedia, i;
+    flag++;
 
     printf("Ruta óptima\n");
+    //printf("La micada: %d\n", route[pos_inicio][pos_final]);
     for (i = 0; i < cantidad_nodos; i++) {
-        if (nodo_inicio == names[i]) {
+        if (strcmp(nodo_inicio, names[i]) == 0) {
             pos_inicio = i;
-        }if (nodo_final == names[i]) {
+            printf("inicio: %d\t", pos_inicio);
+            printf("%s\n", names[i]);
+        }
+        if (strcmp(nodo_final, names[i]) == 0) {
             pos_final = i;
-        } else
-          printf("no está\n");
+            printf("final: %d\t", pos_final);
+            printf("%s\n", names[i]);
+        }
     }
 
     if (route[pos_inicio][pos_final] == 0) {
-        printf("%d\n", route[pos_inicio][pos_final]);
+        lista_rutas[flag] = route[pos_inicio][pos_final];
+        return route[pos_inicio][pos_final];
     } else {
-      pos_intermedia = route[pos_inicio][pos_final];
-      rutas(names[pos_intermedia], names[pos_final]);
+        pos_intermedia = route[pos_inicio][pos_final];
+        lista_rutas[flag] = route[pos_inicio][pos_final];
+
+        rutas(names[pos_intermedia - 1], names[pos_final]);
     }
-    printf("\n");
 }
 
 /* A utility function to print solution */
@@ -236,6 +254,10 @@ void imprimirTablasIntermedias(){
     gtk_widget_show_all(widgets->w_midgrid_nodes);
 }
 
+void printRutas(/* arguments */) {
+  /* code */
+}
+
 void printGraph() {
     printf("The following matrix shows the shortest distances"
            " between every pair of vertices \n");
@@ -277,6 +299,10 @@ void generar_imagen_grafo() {
     system("dot -Tpng test.dot -o src/graph.png");
 }
 
+void generar_imagen_rutas() {
+    system("dot -Tpng test.dot -o src/rutas.png");
+}
+
 void cambiar_nombres_grafos() {
     int i;
     for (i = 0; i < V; i++) {
@@ -289,6 +315,7 @@ void refresh() {
     cambiar_nombres_grafos();
     generar_grafo();
     generar_imagen_grafo();
+    generar_imagen_rutas();
 
     const gchar *style_file = "src/style.css";
     gtk_css_provider_load_from_file(provider, g_file_new_for_path(style_file), 0);
@@ -395,6 +422,7 @@ int main(int argc, char *argv[]) {
 
     generar_grafo();
     generar_imagen_grafo();
+    generar_imagen_rutas();
 
     floyd();
 
@@ -411,6 +439,7 @@ int main(int argc, char *argv[]) {
     widgets->w_sbtn_quantity = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_quantity"));
     widgets->w_grid_nodes = GTK_WIDGET(gtk_builder_get_object(builder, "cont_grid"));
     widgets->w_midgrid_nodes = GTK_WIDGET(gtk_builder_get_object(builder, "cont_tablas_intermedias"));
+    widgets->w_midgrid_nodes = GTK_WIDGET(gtk_builder_get_object(builder, "cont_tablas_intermedias"));
 
 
     gtk_builder_connect_signals(builder, widgets);
@@ -418,6 +447,7 @@ int main(int argc, char *argv[]) {
 
     mainbox = gtk_grid_new();
     midbox = gtk_grid_new();
+    inicio = gtk_entry_new();
 
     gtk_widget_set_halign(mainbox, GTK_ALIGN_CENTER);
 

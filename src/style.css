@@ -34,6 +34,13 @@ GtkButton {
     background-size: contain;
 }
 
+#frame_rutas{
+    background-image: url("rutas.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
 .title_table{
     margin-top: 15px;
     margin-bottom: 5px;
@@ -41,7 +48,7 @@ GtkButton {
 }
 
 .diferente{
-    color: darkgreen;
+    color: lightgreen;
 }
 
 .numero {
