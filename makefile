@@ -2,6 +2,7 @@
 TARGET=proyecto
 TARGET_pending=pending
 TARGET_floyd=floyd
+TARGET_knapsack=knapsack
  
 # compiler
 CC=gcc
@@ -28,6 +29,7 @@ all: $(OBJS)
 	$(LD) -o $(TARGET) $(OBJS) $(LDFLAGS)	
 	$(CC) -o $(TARGET_pending) src/$(TARGET_pending).c $(LDFLAGS)	
 	$(CC) -o $(TARGET_floyd) src/$(TARGET_floyd).c $(LDFLAGS)
+	$(CC) -o $(TARGET_knapsack) src/$(TARGET_knapsack).c $(LDFLAGS)
     
 main.o: src/main.c
 	$(CC) -c $(CCFLAGS) src/main.c $(GTKLIB) -o main.o

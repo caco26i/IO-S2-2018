@@ -177,6 +177,8 @@ void printSolution() {
 
     printf("Tabla de rutas\n");
     for (i = 0; i < cantidad_nodos; i++) {
+        printf("LISTA RUTA:%d\n", lista_rutas[i]);
+
         printf("%7s", names[i]);
         for (j = 0; j < cantidad_nodos; j++) {
             printf("%7d", route[i][j]);

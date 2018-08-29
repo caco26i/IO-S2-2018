@@ -90,6 +90,11 @@ void on_press_floyd_open()
 	system("./floyd &");
 }
 
+void on_knapsack_clicked()
+{
+    system("./knapsack &");
+}
+
 // called when about menu button is clicked
 void on_press_pending_open()
 {

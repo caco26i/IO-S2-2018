@@ -2,5 +2,7 @@
 proyecto
 pending
 floyd
-test.dot
+*.dot
 glade/*.glade*
+src/rutas.png
+src/graph.png
