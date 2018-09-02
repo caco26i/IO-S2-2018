@@ -5,7 +5,7 @@
 
 GtkBuilder      *builder;
 //Declaración de ventanas
-GtkWidget      *window, *about_window, *pending_rutas_cortas, *pending_tba1, *pending_tba2, *pending_tba3, *pending_tba4;
+GtkWidget      *window, *about_window, *pending_rutas_cortas, *pending_knapsack, *pending_tba2, *pending_tba3, *pending_tba4;
 //Declaración de botones
 GtkWidget       *rutas_cortas_btn, *tba1_btn, *tba2_btn, *tba3_btn, *tba4_btn;
 //Declaración de tooltips
@@ -39,14 +39,14 @@ int main(int argc, char *argv[])
 
     //Elementos de tooltip
     gtk_widget_set_tooltip_text(tt_tba0, "Se utiliza el algoritmo X para encontrar las rutas más cortas");
-    gtk_widget_set_tooltip_text(tt_tba1, "Este algoritmo se encuentra en construcción");
+    gtk_widget_set_tooltip_text(tt_tba1, "Allgoritmo de optimización de objetos o de la mochila");
     gtk_widget_set_tooltip_text(tt_tba2, "Este algoritmo se encuentra en construcción");
     gtk_widget_set_tooltip_text(tt_tba3, "Este algoritmo se encuentra en construcción");
     gtk_widget_set_tooltip_text(tt_tba4, "Este algoritmo se encuentra en construcción");
 
     about_window = GTK_WIDGET(gtk_builder_get_object(builder, "about_window"));
     pending_rutas_cortas = GTK_WIDGET(gtk_builder_get_object(builder, "pending_rutas_cortas"));
-    pending_tba1 = GTK_WIDGET(gtk_builder_get_object(builder, "pending_tba1"));
+    pending_knapsack = GTK_WIDGET(gtk_builder_get_object(builder, "pending_knapsack"));
     pending_tba2 = GTK_WIDGET(gtk_builder_get_object(builder, "pending_tba2"));
     pending_tba3 = GTK_WIDGET(gtk_builder_get_object(builder, "pending_tba3"));
     pending_tba4 = GTK_WIDGET(gtk_builder_get_object(builder, "pending_tba4"));
