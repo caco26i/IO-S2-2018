@@ -1,12 +1,12 @@
 digraph G {
 "A"
-"A" -> "B" [ label="3" ];
-"A" -> "C" [ label="1212" ];
 "B"
-"B" -> "C" [ label="2" ];
 "C"
 "D"
-"D" -> "B" [ label="12121" ];
 "E"
-"E" -> "A" [ label="1221" ];
+"F"
+"G"
+"H"
+"I"
+"J"
 }
