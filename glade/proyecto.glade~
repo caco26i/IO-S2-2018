@@ -100,7 +100,7 @@ Dinámica</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="button-press-event" handler="on_press_floyd_open" swapped="no"/>
+            <signal name="clicked" handler="on_press_floyd_open" swapped="no"/>
             <style>
               <class name="btn"/>
             </style>
@@ -111,14 +111,14 @@ Dinámica</property>
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="floyd">
-            <property name="label" translatable="yes">Floyd</property>
+          <object class="GtkButton" id="knapsack">
+            <property name="label" translatable="yes">Knapsack</property>
             <property name="width_request">95</property>
             <property name="height_request">60</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="button-press-event" handler="on_press_pending_open" swapped="no"/>
+            <signal name="clicked" handler="on_knapsack_clicked" swapped="no"/>
             <style>
               <class name="btn"/>
             </style>
