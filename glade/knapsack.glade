@@ -105,7 +105,6 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="margin_bottom">10</property>
-                            <signal name="clicked" handler="generar_archivo" swapped="no"/>
                           </object>
                           <packing>
                             <property name="x">614</property>
@@ -230,7 +229,22 @@
                 <signal name="clicked" handler="leer_archivo" swapped="no"/>
               </object>
               <packing>
-                <property name="x">500</property>
+                <property name="x">400</property>
+                <property name="y">30</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="label" translatable="yes">Guardar archivo</property>
+                <property name="width_request">100</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="generar_archivo" swapped="no"/>
+              </object>
+              <packing>
+                <property name="x">550</property>
                 <property name="y">30</property>
               </packing>
             </child>

@@ -5,8 +5,9 @@
 #include <stdbool.h>
 
 #define CANTIDAD_OBJETOS_MAX 10
+#define W 10
 
-int W = 20;
+int w = 20;
 int CANTIDAD_OBJETOS = 10;
 
 typedef struct {
@@ -55,7 +56,7 @@ item_t items[] = {
 w_item_t w_items[CANTIDAD_OBJETOS_MAX];
 
 GtkWidget       *file_chooser, *save, *mainbox;
-app_widgets *widgets;
+app_widgets     *widgets;
 GtkWidget       *window;
 
 int n = sizeof (items) / sizeof (item_t);
@@ -206,26 +207,26 @@ void unboundedKnapsack(int w) {
 };
 
 
-int unboundedKnapsack2(int W)
+int unboundedKnapsack2(int w)
 {
     // dp[i] is going to store maximum value
     // with knapsack capacity i.
-    int dp[W+1];
+    int dp[w+1];
     memset(dp, 0, sizeof dp);
 
     // Fill dp[] using above recursive formula
-    for (int i=0; i<=W; i++)
+    for (int i=0; i<=w; i++)
         for (int j=0; j<n; j++) {
             best[j] = 0;
             if (items[j].weight <= i) {
                 int newVal = dp[i - items[j].weight] + items[j].value;
                 if(newVal > dp[i]){
                     dp[i] = newVal;
-                    best[j] = W / items[j].weight;
+                    best[j] = w / items[j].weight;
                 }
             }
         }
-    best_value = dp[W];
+    best_value = dp[w];
     return dp[W];
 }
 
@@ -248,7 +249,7 @@ int main(int argc, char *argv[])
 
     widgets = g_slice_new(app_widgets);
 
-    int w = 150;
+    w = W;
 
     //< KNAPSACK 1/0
     printf("\n\nKNAPSACK 1/0\n");
@@ -422,34 +423,26 @@ void generar_archivo() {
   	if(answer == GTK_RESPONSE_ACCEPT){
   		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
   		fichero = fopen(filename,"w+");
-  		//fprintf(fichero,"%i\n%i\n",rows,columns);
-  		//for(i=0;i<rows;i++){
-  			//for(j=0;j<columns;j++){
-  				//fprintf(fichero,"%i\t",spanningTree[i][j]);
-  			//}
-  			fprintf(fichero,"\n");
-  		//}
-  			fprintf(fichero,"\n");
+      for (i = 0; i < CANTIDAD_OBJETOS_MAX; i++) {
+        fprintf(fichero, "%s,", (char *) items[i].name);
+        //printf("%s,", (char *) items[i].name);
+        fprintf(fichero, "%i,", items[i].weight);
+        //printf("%i,", items[i].weight);
+        fprintf(fichero, "%i,", items[i].value);
+        //printf("%i,", items[i].value);
+        fprintf(fichero, "%i", items[i].count);
+        //printf("%i,", items[i].count);
+        fprintf(fichero, "\n");
+      }
   	}
   	fclose(fichero);
   	g_free(filename);
   	gtk_widget_destroy(dialog);
   	gtk_widget_set_sensitive(save,FALSE);
-
-    /*FILE *fichero;
-    fichero = fopen("knapsack.csv", "w+");
-    //fputs("prueba {\n", fichero);
-
-    for (i = 0; i < 5; i++) {
-        fprintf(fichero, "%d,", i);
-    }
-    //fputs("}", fichero);
-    fclose(fichero);*/
 }
 
-void leer_archivo(/*char filename*/) {
-
-    int i, j;
+void leer_archivo() {
+    int i = 0, j;
     char *filename = NULL;
     GtkWidget *dialog;
     FILE *fichero;
@@ -462,6 +455,12 @@ void leer_archivo(/*char filename*/) {
     gint answer = gtk_dialog_run(GTK_DIALOG(dialog));
     if (answer == GTK_RESPONSE_ACCEPT){
         filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        while (i < CANTIDAD_OBJETOS_MAX) {
+          for (j = 0; j < 4; j++) {
+            //fscanf(fichero, "%i", )
+            i++;
+          }
+        }
         fichero = fopen(filename, "r");
         //fscanf(fichero, );
         printf("archivo abierto\n");
