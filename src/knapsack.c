@@ -339,9 +339,9 @@ void generar_archivo() {
   		//for(i=0;i<rows;i++){
   			//for(j=0;j<columns;j++){
   				//fprintf(fichero,"%i\t",spanningTree[i][j]);
-  			}
+  			//}
   			fprintf(fichero,"\n");
-  		}
+  		//}
   	}
   	fclose(fichero);
   	g_free(filename);
