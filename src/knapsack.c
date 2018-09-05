@@ -4,10 +4,10 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define CANTIDAD_OBJETOS_MAX 10
+#define CANTIDAD_OBJETOS_MAX 20
 #define W 1000
 int w;
-int CANTIDAD_OBJETOS = 10;
+int CANTIDAD_OBJETOS = CANTIDAD_OBJETOS_MAX;
 
 typedef struct {
     char *name;
@@ -387,13 +387,9 @@ void generar_archivo() {
   		fichero = fopen(filename,"w+");
       for (i = 0; i < CANTIDAD_OBJETOS_MAX; i++) {
         fprintf(fichero, "%s,", (char *) items[i].name);
-        //printf("%s,", (char *) items[i].name);
         fprintf(fichero, "%i,", items[i].weight);
-        //printf("%i,", items[i].weight);
         fprintf(fichero, "%i,", items[i].value);
-        //printf("%i,", items[i].value);
         fprintf(fichero, "%i", items[i].count);
-        //printf("%i,", items[i].count);
         fprintf(fichero, "\n");
       }
   	}
@@ -408,6 +404,9 @@ void leer_archivo() {
     char *filename = NULL;
     GtkWidget *dialog;
     FILE *fichero;
+    int n = 10;
+    char str[n];
+
     gtk_widget_set_sensitive(save, FALSE);
     dialog = gtk_file_chooser_dialog_new("Abrir archivo", GTK_WINDOW(window),
                                           GTK_FILE_CHOOSER_ACTION_OPEN,
@@ -417,15 +416,11 @@ void leer_archivo() {
     gint answer = gtk_dialog_run(GTK_DIALOG(dialog));
     if (answer == GTK_RESPONSE_ACCEPT){
         filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-        while (i < CANTIDAD_OBJETOS_MAX) {
-          for (j = 0; j < 4; j++) {
-            //fscanf(fichero, "%i", )
-            i++;
-          }
-        }
         fichero = fopen(filename, "r");
-        //fscanf(fichero, );
         printf("archivo abierto\n");
+        if(fgets(str, n, fichero) != ","){
+            puts(str);
+        }
     }
 
     gtk_widget_destroy(dialog);
