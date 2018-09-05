@@ -7,7 +7,7 @@ GtkBuilder      *builder;
 //Declaración de ventanas
 GtkWidget      *window, *about_window, *pending_rutas_cortas, *pending_knapsack, *pending_tba2, *pending_tba3, *pending_tba4;
 //Declaración de botones
-GtkWidget       *rutas_cortas_btn, *tba1_btn, *tba2_btn, *tba3_btn, *tba4_btn;
+GtkWidget       *rutas_cortas_btn, *knapsack_btn, *tba2_btn, *tba3_btn, *tba4_btn;
 //Declaración de tooltips
 GtkWidget       *tt_tba0, *tt_tba1, *tt_tba2, *tt_tba3, *tt_tba4;
 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     //Inicialización de widgets
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
     rutas_cortas_btn = GTK_WIDGET(gtk_builder_get_object(builder, "rutas_cortas"));
-    tba1_btn = GTK_WIDGET(gtk_builder_get_object(builder, "tba1"));
+    knapsack_btn = GTK_WIDGET(gtk_builder_get_object(builder, "knapsack"));
     tba2_btn = GTK_WIDGET(gtk_builder_get_object(builder, "tba2"));
     tba3_btn = GTK_WIDGET(gtk_builder_get_object(builder, "tba3"));
     tba4_btn = GTK_WIDGET(gtk_builder_get_object(builder, "tba4"));
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     //Elementos de tooltip
     gtk_widget_set_tooltip_text(tt_tba0, "Se utiliza el algoritmo X para encontrar las rutas más cortas");
-    gtk_widget_set_tooltip_text(tt_tba1, "Allgoritmo de optimización de objetos o de la mochila");
+    gtk_widget_set_tooltip_text(tt_tba1, "Algoritmo de optimización de objetos o de la mochila");
     gtk_widget_set_tooltip_text(tt_tba2, "Este algoritmo se encuentra en construcción");
     gtk_widget_set_tooltip_text(tt_tba3, "Este algoritmo se encuentra en construcción");
     gtk_widget_set_tooltip_text(tt_tba4, "Este algoritmo se encuentra en construcción");
@@ -92,7 +92,7 @@ void on_press_floyd_open()
 
 void on_knapsack_clicked()
 {
-    system("./knapsack &");
+  system("./knapsack &");
 }
 
 // called when about menu button is clicked
