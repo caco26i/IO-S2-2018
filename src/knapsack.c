@@ -5,9 +5,8 @@
 #include <stdbool.h>
 
 #define CANTIDAD_OBJETOS_MAX 10
-#define W 10
-
-int w = 20;
+#define W 1000
+int w;
 int CANTIDAD_OBJETOS = 10;
 
 typedef struct {
@@ -30,30 +29,13 @@ typedef struct {
     GtkWidget *sbtn_quantity_w;
 } app_widgets;
 
-item_t items[] = {
-        {"map",                      9,   150,   1},
-        {"compass",                 13,    35,   1},
-        {"water",                  153,   200,   2},
-        {"sandwich",                50,    60,   2},
-        {"glucose",                 15,    60,   2},
-        {"tin",                     68,    45,   3},
-        {"banana",                  27,    60,   3},
-        {"apple",                   39,    40,   3},
-        {"cheese",                  23,    30,   1},
-        {"beer",                    52,    10,   3},
-        {"suntan cream",            11,    70,   1},
-        {"camera",                  32,    30,   1},
-        {"T-shirt",                 24,    15,   2},
-        {"trousers",                48,    10,   2},
-        {"umbrella",                73,    40,   1},
-        {"waterproof trousers",     42,    70,   1},
-        {"waterproof overclothes",  43,    75,   1},
-        {"note-case",               22,    80,   1},
-        {"sunglasses",               7,    20,   1},
-        {"towel",                   18,    12,   2},
-        {"socks",                    4,    50,   1},
-        {"book",                    30,    10,   2},
-};
+typedef struct {
+    char *color;
+    int valor;
+} TABLA;
+
+item_t items[CANTIDAD_OBJETOS_MAX];
+TABLA tabla[W][CANTIDAD_OBJETOS_MAX];
 
 w_item_t w_items[CANTIDAD_OBJETOS_MAX];
 
@@ -61,7 +43,7 @@ GtkWidget       *file_chooser, *save, *mainbox;
 app_widgets     *widgets;
 GtkWidget       *window;
 
-int n = sizeof (items) / sizeof (item_t);
+//int n = sizeof (items) / sizeof (item_t);
 int *count;
 int *best;
 double best_value;
@@ -119,10 +101,10 @@ int max(int a, int b) { return (a > b) ? a : b; }
 
 int *knapsack0_1 (int w) {
     int i, j, a, b, *mm, **m, *s;
-    mm = calloc((n + 1) * (w + 1), sizeof (int));
-    m = malloc((n + 1) * sizeof (int *));
+    mm = calloc((CANTIDAD_OBJETOS + 1) * (w + 1), sizeof (int));
+    m = malloc((CANTIDAD_OBJETOS + 1) * sizeof (int *));
     m[0] = mm;
-    for (i = 1; i <= n; i++) {
+    for (i = 1; i <= CANTIDAD_OBJETOS; i++) {
         m[i] = &mm[i * (w + 1)];
         for (j = 0; j <= w; j++) {
             if (items[i - 1].weight > j) {
@@ -135,8 +117,8 @@ int *knapsack0_1 (int w) {
             }
         }
     }
-    s = calloc(n, sizeof (int));
-    for (i = n, j = w; i > 0; i--) {
+    s = calloc(CANTIDAD_OBJETOS, sizeof (int));
+    for (i = CANTIDAD_OBJETOS, j = w; i > 0; i--) {
         if (m[i][j] > m[i - 1][j]) {
             s[i - 1] = 1;
             j -= items[i - 1].weight;
@@ -149,10 +131,10 @@ int *knapsack0_1 (int w) {
 
 int *boundedKnapsack (int w) {
     int i, j, k, v, *mm, **m, *s;
-    mm = calloc((n + 1) * (w + 1), sizeof (int));
-    m = malloc((n + 1) * sizeof (int *));
+    mm = calloc((CANTIDAD_OBJETOS + 1) * (w + 1), sizeof (int));
+    m = malloc((CANTIDAD_OBJETOS + 1) * sizeof (int *));
     m[0] = mm;
-    for (i = 1; i <= n; i++) {
+    for (i = 1; i <= CANTIDAD_OBJETOS; i++) {
         m[i] = &mm[i * (w + 1)];
         for (j = 0; j <= w; j++) {
             m[i][j] = m[i - 1][j];
@@ -167,8 +149,8 @@ int *boundedKnapsack (int w) {
             }
         }
     }
-    s = calloc(n, sizeof (int));
-    for (i = n, j = w; i > 0; i--) {
+    s = calloc(CANTIDAD_OBJETOS, sizeof (int));
+    for (i = CANTIDAD_OBJETOS, j = w; i > 0; i--) {
         int v = m[i][j];
         for (k = 0; v != m[i - 1][j] + k * items[i - 1].value; k++) {
             s[i - 1]++;
@@ -179,17 +161,12 @@ int *boundedKnapsack (int w) {
     free(m);
     return s;
 }
-
-// Returns the maximum value with knapsack of
-// W capacity
-
-
 void unboundedKnapsackAux (int i, double value, double w) {
     int j, m1, m2, m;
-    if (i == n) {
+    if (i == CANTIDAD_OBJETOS) {
         if (value > best_value) {
             best_value = value;
-            for (j = 0; j < n; j++) {
+            for (j = 0; j < CANTIDAD_OBJETOS; j++) {
                 best[j] = count[j];
             }
         }
@@ -204,11 +181,10 @@ void unboundedKnapsackAux (int i, double value, double w) {
         );
     }
 }
+
 void unboundedKnapsack(int w) {
         unboundedKnapsackAux (0, 0, w);
 };
-
-
 int unboundedKnapsack2(int w)
 {
     // dp[i] is going to store maximum value
@@ -218,7 +194,7 @@ int unboundedKnapsack2(int w)
 
     // Fill dp[] using above recursive formula
     for (int i=0; i<=w; i++)
-        for (int j=0; j<n; j++) {
+        for (int j=0; j<CANTIDAD_OBJETOS; j++) {
             best[j] = 0;
             if (items[j].weight <= i) {
                 int newVal = dp[i - items[j].weight] + items[j].value;
@@ -229,7 +205,7 @@ int unboundedKnapsack2(int w)
             }
         }
     best_value = dp[w];
-    return dp[W];
+    return dp[w];
 }
 
 void update_values_knapsack(GtkEntry *entry) {
@@ -263,31 +239,15 @@ void update() {
             gtk_widget_hide(GTK_WIDGET(w_items[i].count));
         }
     }
-}
-
-int main(int argc, char *argv[])
-{
-    GtkBuilder      *builder;
 
 
-    widgets = g_slice_new(app_widgets);
-
-    w = W;
 
     //< KNAPSACK 1/0
     printf("\n\nKNAPSACK 1/0\n");
-    int i, n, tw = 0, tv = 0, *s;
-    n = sizeof (items) / sizeof (item_t);
+    int tw = 0, tv = 0, *s;
     s = knapsack0_1(w);
 
-    gtk_init(&argc, &argv);
-
-    builder = gtk_builder_new();
-    gtk_builder_add_from_file (builder, "glade/knapsack.glade", NULL);
-
-    window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
-    gtk_builder_connect_signals(builder, NULL);
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < CANTIDAD_OBJETOS; i++) {
         if (s[i]) {
             printf("%-22s %5d %5d\n", items[i].name, items[i].weight, items[i].value);
             tw += items[i].weight;
@@ -305,7 +265,7 @@ int main(int argc, char *argv[])
     tw = 0, tv = 0;
 
     s = boundedKnapsack(w);
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < CANTIDAD_OBJETOS; i++) {
         if (s[i]) {
             printf("%-22s %5d %5d %5d\n", items[i].name, s[i], s[i] * items[i].weight, s[i] * items[i].value);
             tc += s[i];
@@ -319,12 +279,12 @@ int main(int argc, char *argv[])
     //< KNAPSACK unbounded
     printf("\n\nKNAPSACK unbounded\n");
 
-    count = malloc(n * sizeof (int));
-    best = malloc(n * sizeof (int));
+    count = malloc(CANTIDAD_OBJETOS * sizeof (int));
+    best = malloc(CANTIDAD_OBJETOS * sizeof (int));
     best_value = 0;
     unboundedKnapsack(w);
 
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < CANTIDAD_OBJETOS; i++) {
         printf("%d %s\n", best[i], items[i].name);
     }
     printf("best value: %.0f\n", best_value);
@@ -334,17 +294,37 @@ int main(int argc, char *argv[])
     //< KNAPSACK unbounded 2
     printf("\n\nKNAPSACK unbounded 2\n");
 
-    count = malloc(n * sizeof (int));
-    best = malloc(n * sizeof (int));
+    count = malloc(CANTIDAD_OBJETOS * sizeof (int));
+    best = malloc(CANTIDAD_OBJETOS * sizeof (int));
     best_value = 0;
     unboundedKnapsack2(w);
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < CANTIDAD_OBJETOS; i++) {
         printf("%d %s\n", best[i], items[i].name);
     }
     printf("best value: %.0f\n", best_value);
     free(count); free(best);
     //</ KNAPSACK unbounded
 
+
+
+
+}
+
+int main(int argc, char *argv[])
+{
+    GtkBuilder      *builder;
+    widgets = g_slice_new(app_widgets);
+    int i;
+
+    w = 200;
+
+    gtk_init(&argc, &argv);
+
+    builder = gtk_builder_new();
+    gtk_builder_add_from_file (builder, "glade/knapsack.glade", NULL);
+
+    window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
+    gtk_builder_connect_signals(builder, NULL);
 
     file_chooser = GTK_WIDGET(gtk_builder_get_object(builder, "file_chooser"));
 
