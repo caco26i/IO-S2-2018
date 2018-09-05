@@ -21,7 +21,7 @@ item_t items[] = {
         {"map",                      9,   150,   1},
         {"compass",                 13,    35,   1},
         {"water",                  153,   200,   2},
-        {"sandwich",                50,    160,   2},
+        {"sandwich",                50,    60,   2},
         {"glucose",                 15,    60,   2},
         {"tin",                     68,    45,   3},
         {"banana",                  27,    60,   3},
@@ -194,6 +194,30 @@ void unboundedKnapsack(int w) {
         unboundedKnapsackAux (0, 0, w);
 };
 
+
+int unboundedKnapsack2(int W)
+{
+    // dp[i] is going to store maximum value
+    // with knapsack capacity i.
+    int dp[W+1];
+    memset(dp, 0, sizeof dp);
+
+    // Fill dp[] using above recursive formula
+    for (int i=0; i<=W; i++)
+        for (int j=0; j<n; j++) {
+            best[j] = 0;
+            if (items[j].weight <= i) {
+                int newVal = dp[i - items[j].weight] + items[j].value;
+                if(newVal > dp[i]){
+                    dp[i] = newVal;
+                    best[j] = W / items[j].weight;
+                }
+            }
+        }
+    best_value = dp[W];
+    return dp[W];
+}
+
 int main(int argc, char *argv[])
 {
     GtkBuilder      *builder;
@@ -201,8 +225,7 @@ int main(int argc, char *argv[])
 
     widgets = g_slice_new(app_widgets);
 
-    int w = 300;
-
+    int w = 150;
 
     //< KNAPSACK 1/0
     printf("\n\nKNAPSACK 1/0\n");
@@ -232,6 +255,8 @@ int main(int argc, char *argv[])
     printf("\n\nKNAPSACK bounded\n");
 
     int tc = 0;
+    tw = 0, tv = 0;
+
     s = boundedKnapsack(w);
     for (i = 0; i < n; i++) {
         if (s[i]) {
@@ -252,6 +277,20 @@ int main(int argc, char *argv[])
     best_value = 0;
     unboundedKnapsack(w);
 
+    for (i = 0; i < n; i++) {
+        printf("%d %s\n", best[i], items[i].name);
+    }
+    printf("best value: %.0f\n", best_value);
+    free(count); free(best);
+    //</ KNAPSACK unbounded
+
+    //< KNAPSACK unbounded 2
+    printf("\n\nKNAPSACK unbounded 2\n");
+
+    count = malloc(n * sizeof (int));
+    best = malloc(n * sizeof (int));
+    best_value = 0;
+    unboundedKnapsack2(w);
     for (i = 0; i < n; i++) {
         printf("%d %s\n", best[i], items[i].name);
     }
