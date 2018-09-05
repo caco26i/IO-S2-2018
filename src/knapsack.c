@@ -3,12 +3,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define V 2048
+
 typedef struct {
     char *name;
     int weight;
     int value;
     int count;
 } item_t;
+
+typedef struct {
+    GtkWidget *w_grid_nodes;
+
+} app_widgets;
 
 item_t items[] = {
         {"map",                      9,   150,   1},
@@ -35,6 +42,11 @@ item_t items[] = {
         {"book",                    30,    10,   2},
 };
 
+GtkWidget       *file_chooser, *save, *mainbox;
+app_widgets *widgets;
+GtkWidget       *window;
+
+char line[V];
 int n = sizeof (items) / sizeof (item_t);
 int *count;
 int *best;
@@ -185,7 +197,9 @@ void unboundedKnapsack(int w) {
 int main(int argc, char *argv[])
 {
     GtkBuilder      *builder;
-    GtkWidget       *window;
+
+
+    widgets = g_slice_new(app_widgets);
 
     int w = 300;
 
@@ -195,6 +209,14 @@ int main(int argc, char *argv[])
     int i, n, tw = 0, tv = 0, *s;
     n = sizeof (items) / sizeof (item_t);
     s = knapsack0_1(w);
+
+    gtk_init(&argc, &argv);
+
+    builder = gtk_builder_new();
+    gtk_builder_add_from_file (builder, "glade/knapsack.glade", NULL);
+
+    window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
+    gtk_builder_connect_signals(builder, NULL);
     for (i = 0; i < n; i++) {
         if (s[i]) {
             printf("%-22s %5d %5d\n", items[i].name, items[i].weight, items[i].value);
@@ -238,16 +260,20 @@ int main(int argc, char *argv[])
     //</ KNAPSACK unbounded
 
 
+    file_chooser = GTK_WIDGET(gtk_builder_get_object(builder, "file_chooser"));
 
-    gtk_init(&argc, &argv);
+    widgets->w_grid_nodes = GTK_WIDGET(gtk_builder_get_object(builder, "cont_grid"));
 
-    builder = gtk_builder_new();
-    gtk_builder_add_from_file (builder, "glade/knapsack.glade", NULL);
-
-    window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
-    gtk_builder_connect_signals(builder, NULL);
+    save=GTK_WIDGET(gtk_builder_get_object(builder,"save"));
+  	gtk_widget_set_sensitive(save,FALSE);
 
     g_object_unref(builder);
+
+    mainbox = gtk_grid_new();
+    gtk_widget_set_halign(mainbox, GTK_ALIGN_CENTER);
+
+
+    gtk_container_add(GTK_CONTAINER(widgets->w_grid_nodes), mainbox);
 
     gtk_widget_show(window);
     gtk_main();
@@ -255,8 +281,81 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+void generar_archivo() {
+    int i, j;
+
+    GtkWidget* dialog;
+  	char* filename = NULL;
+  	FILE* fichero;
+  	dialog = gtk_file_chooser_dialog_new("Guardar archivo", GTK_WINDOW(window),
+                              						GTK_FILE_CHOOSER_ACTION_SAVE,
+                              						("Cancelar"),GTK_RESPONSE_CANCEL,
+                              						("Guardar"),GTK_RESPONSE_ACCEPT,NULL);
+  	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), TRUE);
+  	gint answer = gtk_dialog_run(GTK_DIALOG(dialog));
+  	if(answer == GTK_RESPONSE_ACCEPT){
+  		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+  		fichero = fopen(filename,"w+");
+  		//fprintf(fichero,"%i\n%i\n",rows,columns);
+  		//for(i=0;i<rows;i++){
+  			//for(j=0;j<columns;j++){
+  				//fprintf(fichero,"%i\t",spanningTree[i][j]);
+  			}
+  			fprintf(fichero,"\n");
+  		}
+  	}
+  	fclose(fichero);
+  	g_free(filename);
+  	gtk_widget_destroy(dialog);
+  	gtk_widget_set_sensitive(save,FALSE);
+
+    /*FILE *fichero;
+    fichero = fopen("knapsack.csv", "w+");
+    //fputs("prueba {\n", fichero);
+
+    for (i = 0; i < 5; i++) {
+        fprintf(fichero, "%d,", i);
+    }
+    //fputs("}", fichero);
+    fclose(fichero);*/
+}
+
+void leer_archivo(/*char filename*/) {
+
+    int i, j;
+    char *filename = NULL;
+    GtkWidget *dialog;
+    FILE *fichero;
+    gtk_widget_set_sensitive(save, FALSE);
+    dialog = gtk_file_chooser_dialog_new("Abrir archivo", GTK_WINDOW(window),
+                                          GTK_FILE_CHOOSER_ACTION_OPEN,
+                                          ("Cancelar"), GTK_RESPONSE_CANCEL,
+                                          ("Abrir"), GTK_RESPONSE_ACCEPT, NULL);
+
+    gint answer = gtk_dialog_run(GTK_DIALOG(dialog));
+    if (answer == GTK_RESPONSE_ACCEPT){
+        filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        fichero = fopen(filename, "r");
+        //fscanf(fichero, );
+        printf("archivo abierto\n");
+    }
+
+    gtk_widget_destroy(dialog);
+    fclose(fichero);
+    g_free (filename);
+    gtk_widget_show(window);
+}
+
+void on_press_file_chooser() {
+  gtk_widget_show (file_chooser);
+}
+
 // called when window is closed
-void on_window_main_destroy()
-{
+void on_window_main_destroy() {
     gtk_main_quit();
+}
+
+void on_file_chooser_destroy()
+{
+    gtk_widget_hide_on_delete(file_chooser);
 }
