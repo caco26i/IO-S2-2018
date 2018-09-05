@@ -113,7 +113,11 @@ int *knapsack0_1 (int w) {
             else {
                 a = m[i - 1][j];
                 b = m[i - 1][j - items[i - 1].weight] + items[i - 1].value;
-                m[i][j] = a > b ? a : b;
+                if(a > b){
+                    m[i][j] = a;
+                } else {
+                    m[i][j] = b;
+                }
             }
         }
     }
@@ -161,31 +165,7 @@ int *boundedKnapsack (int w) {
     free(m);
     return s;
 }
-void unboundedKnapsackAux (int i, double value, double w) {
-    int j, m1, m2, m;
-    if (i == CANTIDAD_OBJETOS) {
-        if (value > best_value) {
-            best_value = value;
-            for (j = 0; j < CANTIDAD_OBJETOS; j++) {
-                best[j] = count[j];
-            }
-        }
-        return;
-    }
-    m = w / items[i].weight;
-    for (count[i] = m; count[i] >= 0; count[i]--) {
-        unboundedKnapsackAux(
-                i+1,
-                value + count[i] * items[i].value,
-                w - count[i] * items[i].weight
-        );
-    }
-}
-
-void unboundedKnapsack(int w) {
-        unboundedKnapsackAux (0, 0, w);
-};
-int unboundedKnapsack2(int w)
+int unboundedKnapsack(int w)
 {
     // dp[i] is going to store maximum value
     // with knapsack capacity i.
@@ -283,31 +263,12 @@ void update() {
     best = malloc(CANTIDAD_OBJETOS * sizeof (int));
     best_value = 0;
     unboundedKnapsack(w);
-
     for (i = 0; i < CANTIDAD_OBJETOS; i++) {
         printf("%d %s\n", best[i], items[i].name);
     }
     printf("best value: %.0f\n", best_value);
     free(count); free(best);
     //</ KNAPSACK unbounded
-
-    //< KNAPSACK unbounded 2
-    printf("\n\nKNAPSACK unbounded 2\n");
-
-    count = malloc(CANTIDAD_OBJETOS * sizeof (int));
-    best = malloc(CANTIDAD_OBJETOS * sizeof (int));
-    best_value = 0;
-    unboundedKnapsack2(w);
-    for (i = 0; i < CANTIDAD_OBJETOS; i++) {
-        printf("%d %s\n", best[i], items[i].name);
-    }
-    printf("best value: %.0f\n", best_value);
-    free(count); free(best);
-    //</ KNAPSACK unbounded
-
-
-
-
 }
 
 int main(int argc, char *argv[])
