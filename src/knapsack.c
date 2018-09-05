@@ -2,8 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
-#define V 2048
+#define CANTIDAD_OBJETOS_MAX 10
+
+int W = 20;
+int CANTIDAD_OBJETOS = 10;
 
 typedef struct {
     char *name;
@@ -13,8 +17,14 @@ typedef struct {
 } item_t;
 
 typedef struct {
-    GtkWidget *w_grid_nodes;
+    GtkWidget *name;
+    GtkWidget *weight;
+    GtkWidget *value;
+    GtkWidget *count;
+} w_item_t;
 
+typedef struct {
+    GtkWidget *w_grid_knapsack;
 } app_widgets;
 
 item_t items[] = {
@@ -42,11 +52,12 @@ item_t items[] = {
         {"book",                    30,    10,   2},
 };
 
+w_item_t w_items[CANTIDAD_OBJETOS_MAX];
+
 GtkWidget       *file_chooser, *save, *mainbox;
 app_widgets *widgets;
 GtkWidget       *window;
 
-char line[V];
 int n = sizeof (items) / sizeof (item_t);
 int *count;
 int *best;
@@ -218,6 +229,18 @@ int unboundedKnapsack2(int W)
     return dp[W];
 }
 
+void update_values_knapsack(GtkEntry *entry) {
+    int length, k;
+    int i = GPOINTER_TO_UINT(g_object_get_data(G_OBJECT(entry), "i"));
+    const gchar * value = gtk_entry_get_text(entry);
+
+    items[i].name = (char *) gtk_entry_get_text(GTK_ENTRY(w_items[i].name));
+    items[i].weight = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w_items[i].weight));
+    items[i].value = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w_items[i].value));
+    items[i].count = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w_items[i].count));
+}
+
+
 int main(int argc, char *argv[])
 {
     GtkBuilder      *builder;
@@ -301,7 +324,7 @@ int main(int argc, char *argv[])
 
     file_chooser = GTK_WIDGET(gtk_builder_get_object(builder, "file_chooser"));
 
-    widgets->w_grid_nodes = GTK_WIDGET(gtk_builder_get_object(builder, "cont_grid"));
+    widgets->w_grid_knapsack = GTK_WIDGET(gtk_builder_get_object(builder, "cont_grid"));
 
     save=GTK_WIDGET(gtk_builder_get_object(builder,"save"));
   	gtk_widget_set_sensitive(save,FALSE);
@@ -311,8 +334,72 @@ int main(int argc, char *argv[])
     mainbox = gtk_grid_new();
     gtk_widget_set_halign(mainbox, GTK_ALIGN_CENTER);
 
+    item_t items[CANTIDAD_OBJETOS];
 
-    gtk_container_add(GTK_CONTAINER(widgets->w_grid_nodes), mainbox);
+    GtkWidget *label = gtk_label_new("NOMBRE  ");
+    gtk_grid_attach(GTK_GRID(mainbox), label, 1, 0, 1, 1);
+    label = gtk_label_new("PESO  ");
+    gtk_grid_attach(GTK_GRID(mainbox), label, 2, 0, 1, 1);
+    label = gtk_label_new("VALOR  ");
+    gtk_grid_attach(GTK_GRID(mainbox), label, 3, 0, 1, 1);
+    label = gtk_label_new("CANTIDAD  ");
+    gtk_grid_attach(GTK_GRID(mainbox), label, 4, 0, 1, 1);
+
+    char buffer[10];
+    for (i = 0; i < CANTIDAD_OBJETOS; i++) {
+        GtkWidget *button;
+        GtkAdjustment *adjustment;
+
+
+        sprintf(buffer, "ITEM #%d", i+1); // modified to append string
+
+        GtkWidget *label = gtk_label_new(buffer);
+        gtk_grid_attach(GTK_GRID(mainbox), label, 0, i+1, 1, 1);
+
+
+        GtkWidget *entry = gtk_entry_new();
+        g_object_set_data(G_OBJECT(entry), "i", GINT_TO_POINTER(i));
+        w_items[i].name = entry;
+        gtk_entry_set_text(GTK_ENTRY(entry), buffer);
+        gtk_entry_set_width_chars(GTK_ENTRY(entry), 10);
+        gtk_grid_attach(GTK_GRID(mainbox), entry, 1, i+1, 1, 1);
+        g_signal_connect(entry, "changed", G_CALLBACK(update_values_knapsack), NULL);
+
+        //peso
+        adjustment = gtk_adjustment_new (0, 0, 999999999999999, 1, 1, 0);
+        entry = gtk_spin_button_new (adjustment, 0, 0);
+        g_object_set_data(G_OBJECT(entry), "i", GINT_TO_POINTER(i));
+        w_items[i].weight = entry;
+        gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(entry), true);
+        gtk_entry_set_width_chars(GTK_ENTRY(entry), 5);
+        gtk_grid_attach(GTK_GRID(mainbox), entry, 2, i+1, 1, 1);
+        g_signal_connect(entry, "changed", G_CALLBACK(update_values_knapsack), NULL);
+
+        //valor
+        adjustment = gtk_adjustment_new (0, 0, 999999999999999, 1, 1, 0);
+        entry = gtk_spin_button_new (adjustment, 0, 0);
+        g_object_set_data(G_OBJECT(entry), "i", GINT_TO_POINTER(i));
+        w_items[i].value = entry;
+        gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(entry), true);
+        gtk_entry_set_text(GTK_ENTRY(entry), "Valor");
+        gtk_entry_set_width_chars(GTK_ENTRY(entry), 5);
+        gtk_grid_attach(GTK_GRID(mainbox), entry, 3, i+1, 1, 1);
+        g_signal_connect(entry, "changed", G_CALLBACK(update_values_knapsack), NULL);
+
+        //cantidad
+        adjustment = gtk_adjustment_new (0, 0, 999999999999999, 1, 1, 0);
+        entry = gtk_spin_button_new (adjustment, 0, 0);
+        g_object_set_data(G_OBJECT(entry), "i", GINT_TO_POINTER(i));
+        w_items[i].count = entry;
+        gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(entry), true);
+        gtk_entry_set_text(GTK_ENTRY(entry), "Valor");
+        gtk_entry_set_width_chars(GTK_ENTRY(entry), 5);
+        gtk_grid_attach(GTK_GRID(mainbox), entry, 4, i+1, 1, 1);
+        g_signal_connect(entry, "changed", G_CALLBACK(update_values_knapsack), NULL);
+    }
+
+    gtk_container_add(GTK_CONTAINER(widgets->w_grid_knapsack), mainbox);
+    gtk_widget_show_all(widgets->w_grid_knapsack);
 
     gtk_widget_show(window);
     gtk_main();
@@ -339,9 +426,15 @@ void generar_archivo() {
   		//for(i=0;i<rows;i++){
   			//for(j=0;j<columns;j++){
   				//fprintf(fichero,"%i\t",spanningTree[i][j]);
+<<<<<<< HEAD
   			//}
   			fprintf(fichero,"\n");
   		//}
+=======
+
+  			fprintf(fichero,"\n");
+
+>>>>>>> master
   	}
   	fclose(fichero);
   	g_free(filename);
