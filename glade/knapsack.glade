@@ -78,7 +78,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="sbtn_quantity1">
+                          <object class="GtkSpinButton" id="sbtn_quantity_count">
                             <property name="width_request">100</property>
                             <property name="height_request">60</property>
                             <property name="visible">True</property>
@@ -105,6 +105,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="margin_bottom">10</property>
+                            <signal name="clicked" handler="update" swapped="no"/>
                           </object>
                           <packing>
                             <property name="x">614</property>
@@ -138,7 +139,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="sbtn_quantity2">
+                          <object class="GtkSpinButton" id="sbtn_quantity_w">
                             <property name="width_request">100</property>
                             <property name="height_request">60</property>
                             <property name="visible">True</property>

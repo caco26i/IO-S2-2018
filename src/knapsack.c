@@ -26,6 +26,8 @@ typedef struct {
 
 typedef struct {
     GtkWidget *w_grid_knapsack;
+    GtkWidget *sbtn_quantity_count;
+    GtkWidget *sbtn_quantity_w;
 } app_widgets;
 
 item_t items[] = {
@@ -241,6 +243,27 @@ void update_values_knapsack(GtkEntry *entry) {
     items[i].count = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w_items[i].count));
 }
 
+void update() {
+    int i;
+
+    CANTIDAD_OBJETOS = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widgets->sbtn_quantity_count));
+    w = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widgets->sbtn_quantity_w));
+
+
+    for (i = 0; i < CANTIDAD_OBJETOS_MAX; i++) {
+        if (i < CANTIDAD_OBJETOS) {
+            gtk_widget_show(GTK_WIDGET(w_items[i].name));
+            gtk_widget_show(GTK_WIDGET(w_items[i].weight));
+            gtk_widget_show(GTK_WIDGET(w_items[i].value));
+            gtk_widget_show(GTK_WIDGET(w_items[i].count));
+        } else {
+            gtk_widget_hide(GTK_WIDGET(w_items[i].name));
+            gtk_widget_hide(GTK_WIDGET(w_items[i].weight));
+            gtk_widget_hide(GTK_WIDGET(w_items[i].value));
+            gtk_widget_hide(GTK_WIDGET(w_items[i].count));
+        }
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -326,6 +349,8 @@ int main(int argc, char *argv[])
     file_chooser = GTK_WIDGET(gtk_builder_get_object(builder, "file_chooser"));
 
     widgets->w_grid_knapsack = GTK_WIDGET(gtk_builder_get_object(builder, "cont_grid"));
+    widgets->sbtn_quantity_count = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_quantity_count"));
+    widgets->sbtn_quantity_w = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_quantity_w"));
 
     save=GTK_WIDGET(gtk_builder_get_object(builder,"save"));
   	gtk_widget_set_sensitive(save,FALSE);
@@ -353,10 +378,6 @@ int main(int argc, char *argv[])
 
 
         sprintf(buffer, "ITEM #%d", i+1); // modified to append string
-
-        GtkWidget *label = gtk_label_new(buffer);
-        gtk_grid_attach(GTK_GRID(mainbox), label, 0, i+1, 1, 1);
-
 
         GtkWidget *entry = gtk_entry_new();
         g_object_set_data(G_OBJECT(entry), "i", GINT_TO_POINTER(i));
