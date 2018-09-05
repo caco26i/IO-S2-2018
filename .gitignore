@@ -5,5 +5,4 @@ floyd
 knapsack
 *.dot
 glade/*.glade*
-src/rutas.png
-src/graph.png
+src/*.png
