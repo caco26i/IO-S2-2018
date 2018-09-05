@@ -426,15 +426,10 @@ void generar_archivo() {
   		//for(i=0;i<rows;i++){
   			//for(j=0;j<columns;j++){
   				//fprintf(fichero,"%i\t",spanningTree[i][j]);
-<<<<<<< HEAD
   			//}
   			fprintf(fichero,"\n");
   		//}
-=======
-
   			fprintf(fichero,"\n");
-
->>>>>>> master
   	}
   	fclose(fichero);
   	g_free(filename);
