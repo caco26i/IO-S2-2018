@@ -114,13 +114,20 @@ int *knapsack0_1 (int w) {
                 a = m[i - 1][j];
                 b = m[i - 1][j - items[i - 1].weight] + items[i - 1].value;
                 if(a > b){
-                    m[i][j] = a;
+//                    tabla[j][i-1].valor =
+                            m[i][j] = a;
+                    tabla[j][i-1].color = "green";
+
                 } else {
-                    m[i][j] = b;
+//                    tabla[j][i-1].valor =
+                            m[i][j] = b;
+//                    tabla[j][i-1].color = "red";
                 }
             }
+//            tabla[j][i-1].valor = m[i][j];
         }
     }
+    int max = 0;
     s = calloc(CANTIDAD_OBJETOS, sizeof (int));
     for (i = CANTIDAD_OBJETOS, j = w; i > 0; i--) {
         if (m[i][j] > m[i - 1][j]) {
