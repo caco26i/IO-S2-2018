@@ -4,10 +4,10 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define CANTIDAD_OBJETOS_MAX 20
+#define CANTIDAD_OBJETOS_MAX 100
 #define W 1000
 int w;
-int CANTIDAD_OBJETOS = CANTIDAD_OBJETOS_MAX;
+int CANTIDAD_OBJETOS = 10;
 
 typedef struct {
     char *name;
@@ -199,12 +199,20 @@ void update_values_knapsack(GtkEntry *entry) {
     items[i].count = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w_items[i].count));
 }
 
+void printTabla() {
+    int i, j;
+    for (i = 0; i <= w; i++) {
+        for (j = 0; j < CANTIDAD_OBJETOS; j++) {
+            printf("%7d %s", tabla[i][j].valor, tabla[i][j].color);
+        }
+        printf("\n");
+    }
+}
 void update() {
     int i;
 
     CANTIDAD_OBJETOS = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widgets->sbtn_quantity_count));
     w = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widgets->sbtn_quantity_w));
-
 
     for (i = 0; i < CANTIDAD_OBJETOS_MAX; i++) {
         if (i < CANTIDAD_OBJETOS) {
@@ -220,8 +228,6 @@ void update() {
         }
     }
 
-
-
     //< KNAPSACK 1/0
     printf("\n\nKNAPSACK 1/0\n");
     int tw = 0, tv = 0, *s;
@@ -234,7 +240,9 @@ void update() {
             tv += items[i].value;
         }
     }
-    printf("%-22s %5d %5d\n", "weight, value:", tw, tv);
+    printf("%-22s %5d %5d\n\n", "weight, value:", tw, tv);
+
+    printTabla();
 
     //</ KNAPSACK 1/0
 
@@ -277,7 +285,7 @@ int main(int argc, char *argv[])
     widgets = g_slice_new(app_widgets);
     int i;
 
-    w = 200;
+    w = 20;
 
     gtk_init(&argc, &argv);
 
