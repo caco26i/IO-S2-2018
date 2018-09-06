@@ -27,6 +27,10 @@ typedef struct {
     GtkWidget *w_grid_knapsack;
     GtkWidget *sbtn_quantity_count;
     GtkWidget *sbtn_quantity_w;
+    GtkWidget *radio10;
+    GtkWidget *radioUnbounded;
+    GtkWidget *radioBounded;
+    GtkWidget *labelCount;
 } app_widgets;
 
 typedef struct {
@@ -219,56 +223,81 @@ void update() {
             gtk_widget_hide(GTK_WIDGET(w_items[i].count));
         }
     }
+}
+
+void actualizar_algoritmo(){
+	int i;
+	if(gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widgets ->radio10)) || gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widgets ->radioUnbounded))) {
+		for (i = 0; i < CANTIDAD_OBJETOS_MAX; i++) {
+			gtk_widget_hide(GTK_WIDGET(widgets->labelCount));
+            gtk_widget_hide(GTK_WIDGET(w_items[i].count));
+		}		
+	}
+	else if(gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widgets ->radioBounded))){
+		for (i = 0; i < CANTIDAD_OBJETOS_MAX; i++) {
+			gtk_widget_show(GTK_WIDGET(widgets->labelCount));
+            gtk_widget_show(GTK_WIDGET(w_items[i].count));
+		}		
+	}
+}
 
 
+void print_solution(){
+	int i;
+	int tw = 0, tv = 0, *s;
+	if(gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widgets ->radio10))) {
+		//< KNAPSACK 1/0
+		printf("\n\nKNAPSACK 1/0\n");
+		
+		s = knapsack0_1(w);
 
-    //< KNAPSACK 1/0
-    printf("\n\nKNAPSACK 1/0\n");
-    int tw = 0, tv = 0, *s;
-    s = knapsack0_1(w);
-
-    for (i = 0; i < CANTIDAD_OBJETOS; i++) {
-        if (s[i]) {
-            printf("%-22s %5d %5d\n", items[i].name, items[i].weight, items[i].value);
-            tw += items[i].weight;
-            tv += items[i].value;
-        }
-    }
-    printf("%-22s %5d %5d\n", "weight, value:", tw, tv);
-
+		for (i = 0; i < CANTIDAD_OBJETOS; i++) {
+			if (s[i]) {
+				printf("%-22s %5d %5d\n", items[i].name, items[i].weight, items[i].value);
+				tw += items[i].weight;
+				tv += items[i].value;
+			}
+		}
+		
+		printf("%-22s %5d %5d\n", "weight, value:", tw, tv);		
     //</ KNAPSACK 1/0
+	}
+	
+	else if(gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widgets ->radioBounded))){
+		//< KNAPSACK bounded
+		printf("\n\nKNAPSACK bounded\n");
 
-    //< KNAPSACK bounded
-    printf("\n\nKNAPSACK bounded\n");
+		int tc = 0;
+		tw = 0, tv = 0;
 
-    int tc = 0;
-    tw = 0, tv = 0;
+		s = boundedKnapsack(w);
+		for (i = 0; i < CANTIDAD_OBJETOS; i++) {
+			if (s[i]) {
+				printf("%-22s %5d %5d %5d\n", items[i].name, s[i], s[i] * items[i].weight, s[i] * items[i].value);
+				tc += s[i];
+				tw += s[i] * items[i].weight;
+				tv += s[i] * items[i].value;
+			}
+		}
+		printf("%-22s %5d %5d %5d\n", "count, weight, value:", tc, tw, tv);
+		//</ KNAPSACK bounded		
+	}
+	
+	else if(gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(widgets ->radioUnbounded))){
+		//< KNAPSACK unbounded
+		printf("\n\nKNAPSACK unbounded\n");
 
-    s = boundedKnapsack(w);
-    for (i = 0; i < CANTIDAD_OBJETOS; i++) {
-        if (s[i]) {
-            printf("%-22s %5d %5d %5d\n", items[i].name, s[i], s[i] * items[i].weight, s[i] * items[i].value);
-            tc += s[i];
-            tw += s[i] * items[i].weight;
-            tv += s[i] * items[i].value;
-        }
-    }
-    printf("%-22s %5d %5d %5d\n", "count, weight, value:", tc, tw, tv);
-    //</ KNAPSACK bounded
-
-    //< KNAPSACK unbounded
-    printf("\n\nKNAPSACK unbounded\n");
-
-    count = malloc(CANTIDAD_OBJETOS * sizeof (int));
-    best = malloc(CANTIDAD_OBJETOS * sizeof (int));
-    best_value = 0;
-    unboundedKnapsack(w);
-    for (i = 0; i < CANTIDAD_OBJETOS; i++) {
-        printf("%d %s\n", best[i], items[i].name);
-    }
-    printf("best value: %.0f\n", best_value);
-    free(count); free(best);
-    //</ KNAPSACK unbounded
+		count = malloc(CANTIDAD_OBJETOS * sizeof (int));
+		best = malloc(CANTIDAD_OBJETOS * sizeof (int));
+		best_value = 0;
+		unboundedKnapsack(w);
+		for (i = 0; i < CANTIDAD_OBJETOS; i++) {
+			printf("%d %s\n", best[i], items[i].name);
+		}
+		printf("best value: %.0f\n", best_value);
+		free(count); free(best);
+		//</ KNAPSACK unbounded	
+	}
 }
 
 int main(int argc, char *argv[])
@@ -292,6 +321,9 @@ int main(int argc, char *argv[])
     widgets->w_grid_knapsack = GTK_WIDGET(gtk_builder_get_object(builder, "cont_grid"));
     widgets->sbtn_quantity_count = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_quantity_count"));
     widgets->sbtn_quantity_w = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_quantity_w"));
+    widgets->radio10 = GTK_WIDGET(gtk_builder_get_object(builder, "radio10"));
+    widgets->radioBounded = GTK_WIDGET(gtk_builder_get_object(builder, "radioBounded"));
+    widgets->radioUnbounded = GTK_WIDGET(gtk_builder_get_object(builder, "radioUnbounded"));
 
     save=GTK_WIDGET(gtk_builder_get_object(builder,"save"));
   	gtk_widget_set_sensitive(save,FALSE);
@@ -310,6 +342,7 @@ int main(int argc, char *argv[])
     label = gtk_label_new("VALOR  ");
     gtk_grid_attach(GTK_GRID(mainbox), label, 3, 0, 1, 1);
     label = gtk_label_new("CANTIDAD  ");
+    widgets ->labelCount = label;
     gtk_grid_attach(GTK_GRID(mainbox), label, 4, 0, 1, 1);
 
     char buffer[10];
