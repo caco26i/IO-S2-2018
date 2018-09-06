@@ -37,7 +37,7 @@
                 <property name="label" translatable="yes">Algoritmo Knapsack</property>
                 <attributes>
                   <attribute name="font-desc" value="Lato Ultra-Bold Italic 24"/>
-                  <attribute name="foreground" value="#ffffffffffff"/>
+                  <attribute name="foreground" value="#88888a8a8585"/>
                 </attributes>
               </object>
               <packing>
@@ -62,7 +62,7 @@
                         <property name="can_focus">False</property>
                         <child>
                           <object class="GtkLabel">
-                            <property name="width_request">100</property>
+                            <property name="width_request">442</property>
                             <property name="height_request">60</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
@@ -73,13 +73,14 @@
                             </attributes>
                           </object>
                           <packing>
-                            <property name="x">15</property>
+                            <property name="x">7</property>
+                            <property name="y">10</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkSpinButton" id="sbtn_quantity_count">
-                            <property name="width_request">100</property>
-                            <property name="height_request">60</property>
+                            <property name="width_request">80</property>
+                            <property name="height_request">34</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="max_length">10</property>
@@ -92,14 +93,15 @@
                             <property name="value">10</property>
                           </object>
                           <packing>
-                            <property name="x">475</property>
+                            <property name="x">462</property>
+                            <property name="y">20</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkButton">
                             <property name="label" translatable="yes">Cambiar</property>
-                            <property name="width_request">85</property>
-                            <property name="height_request">60</property>
+                            <property name="width_request">84</property>
+                            <property name="height_request">34</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
@@ -107,7 +109,8 @@
                             <signal name="clicked" handler="update" swapped="no"/>
                           </object>
                           <packing>
-                            <property name="x">614</property>
+                            <property name="x">613</property>
+                            <property name="y">19</property>
                           </packing>
                         </child>
                       </object>
@@ -123,7 +126,7 @@
                         <property name="can_focus">False</property>
                         <child>
                           <object class="GtkLabel">
-                            <property name="width_request">100</property>
+                            <property name="width_request">471</property>
                             <property name="height_request">60</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
@@ -134,13 +137,14 @@
                             </attributes>
                           </object>
                           <packing>
-                            <property name="x">15</property>
+                            <property name="x">8</property>
+                            <property name="y">10</property>
                           </packing>
                         </child>
                         <child>
                           <object class="GtkSpinButton" id="sbtn_quantity_w">
-                            <property name="width_request">100</property>
-                            <property name="height_request">60</property>
+                            <property name="width_request">124</property>
+                            <property name="height_request">34</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="margin_bottom">10</property>
@@ -154,7 +158,8 @@
                             <property name="value">20</property>
                           </object>
                           <packing>
-                            <property name="x">525</property>
+                            <property name="x">494</property>
+                            <property name="y">20</property>
                           </packing>
                         </child>
                       </object>
@@ -236,31 +241,109 @@
             <child>
               <object class="GtkButton">
                 <property name="label" translatable="yes">Cargar archivo</property>
-                <property name="width_request">100</property>
-                <property name="height_request">30</property>
+                <property name="width_request">122</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <signal name="clicked" handler="leer_archivo" swapped="no"/>
               </object>
               <packing>
-                <property name="x">400</property>
-                <property name="y">30</property>
+                <property name="x">573</property>
+                <property name="y">5</property>
               </packing>
             </child>
             <child>
               <object class="GtkButton">
                 <property name="label" translatable="yes">Guardar archivo</property>
-                <property name="width_request">100</property>
-                <property name="height_request">30</property>
+                <property name="width_request">131</property>
+                <property name="height_request">34</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <signal name="clicked" handler="generar_archivo" swapped="no"/>
               </object>
               <packing>
-                <property name="x">550</property>
-                <property name="y">30</property>
+                <property name="x">566</property>
+                <property name="y">53</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="buton_respuesta">
+                <property name="label" translatable="yes">Generar Solución</property>
+                <property name="width_request">137</property>
+                <property name="height_request">34</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="print_solution" swapped="no"/>
+              </object>
+              <packing>
+                <property name="x">453</property>
+                <property name="y">555</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="width_request">100</property>
+                <property name="height_request">80</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkRadioButton" id="radio10">
+                    <property name="label" translatable="yes">1/0</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="active">True</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="actualizar_algoritmo" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkRadioButton" id="radioBounded">
+                    <property name="label" translatable="yes">Bounded</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="active">True</property>
+                    <property name="draw_indicator">True</property>
+                    <property name="group">radio10</property>
+                    <signal name="toggled" handler="actualizar_algoritmo" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkRadioButton" id="radioUnbounded">
+                    <property name="label" translatable="yes">Unbounded</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="active">True</property>
+                    <property name="draw_indicator">True</property>
+                    <property name="group">radio10</property>
+                    <signal name="toggled" handler="actualizar_algoritmo" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="x">397</property>
+                <property name="y">15</property>
               </packing>
             </child>
           </object>
