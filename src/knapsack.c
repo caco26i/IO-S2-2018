@@ -25,12 +25,14 @@ typedef struct {
 
 typedef struct {
     GtkWidget *w_grid_knapsack;
+    GtkWidget *w_midgrid_nodes;
     GtkWidget *sbtn_quantity_count;
     GtkWidget *sbtn_quantity_w;
     GtkWidget *radio10;
     GtkWidget *radioUnbounded;
     GtkWidget *radioBounded;
     GtkWidget *labelCount;
+
 } app_widgets;
 
 typedef struct {
@@ -43,7 +45,7 @@ TABLA tabla[W][CANTIDAD_OBJETOS_MAX];
 
 w_item_t w_items[CANTIDAD_OBJETOS_MAX];
 
-GtkWidget *file_chooser, *save, *mainbox;
+GtkWidget *file_chooser, *save, *mainbox, *midbox;
 app_widgets *widgets;
 GtkWidget *window;
 
@@ -108,6 +110,9 @@ int *knapsack0_1(int w) {
     mm = calloc((CANTIDAD_OBJETOS + 1) * (w + 1), sizeof(int));
     m = malloc((CANTIDAD_OBJETOS + 1) * sizeof(int *));
     m[0] = mm;
+
+    int K[W+1][CANTIDAD_OBJETOS+1];
+
     for (i = 1; i <= CANTIDAD_OBJETOS; i++) {
         m[i] = &mm[i * (w + 1)];
         for (j = 0; j <= w; j++) {
@@ -159,6 +164,8 @@ int *boundedKnapsack(int w) {
                     m[i][j] = v;
                 }
             }
+
+            tabla[j][i-1].valor = m[i][j];
         }
     }
     s = calloc(CANTIDAD_OBJETOS, sizeof(int));
@@ -233,12 +240,12 @@ void actualizar_algoritmo() {
     int i;
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widgets->radio10)) ||
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widgets->radioUnbounded))) {
-        for (i = 0; i < CANTIDAD_OBJETOS_MAX; i++) {
+        for (i = 0; i < CANTIDAD_OBJETOS; i++) {
             gtk_widget_hide(GTK_WIDGET(widgets->labelCount));
             gtk_widget_hide(GTK_WIDGET(w_items[i].count));
         }
     } else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widgets->radioBounded))) {
-        for (i = 0; i < CANTIDAD_OBJETOS_MAX; i++) {
+        for (i = 0; i < CANTIDAD_OBJETOS; i++) {
             gtk_widget_show(GTK_WIDGET(widgets->labelCount));
             gtk_widget_show(GTK_WIDGET(w_items[i].count));
         }
@@ -249,6 +256,31 @@ void actualizar_algoritmo() {
 void print_solution() {
     int i, j;
     int tw = 0, tv = 0, *s;
+    char buffer[250];
+    GtkWidget *entry;
+
+
+    GList *children, *iter;
+
+    children = gtk_container_get_children(GTK_CONTAINER(widgets->w_midgrid_nodes));
+    for(iter = children; iter != NULL; iter = g_list_next(iter))
+        gtk_widget_destroy(GTK_WIDGET(iter->data));
+    g_list_free(children);
+
+    midbox = gtk_grid_new();
+    gtk_widget_set_halign(midbox, GTK_ALIGN_CENTER);
+
+    entry= gtk_label_new("SOLUCIÓN OPTIMA:");
+    gtk_grid_attach(GTK_GRID(midbox), entry, 0, 0, 1, 1);
+    gtk_container_add(GTK_CONTAINER(widgets->w_midgrid_nodes), midbox);
+
+
+    midbox = gtk_grid_new();
+    gtk_widget_set_halign(midbox, GTK_ALIGN_CENTER);
+
+    int l = 0;
+    int k = 0;
+
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widgets->radio10))) {
         //< KNAPSACK 1/0
         printf("\n\nKNAPSACK 1/0\n");
@@ -257,15 +289,37 @@ void print_solution() {
 
         for (i = 0; i < CANTIDAD_OBJETOS; i++) {
             if (s[i]) {
+                sprintf(buffer, "%-22s %5d %5d\n", items[i].name, items[i].weight, items[i].value);
+                entry= gtk_label_new(buffer);
+                gtk_grid_attach(GTK_GRID(midbox), entry, k++, l, 1, 1);
+
+                l++;
+                k=0;
+
                 printf("%-22s %5d %5d\n", items[i].name, items[i].weight, items[i].value);
                 tw += items[i].weight;
                 tv += items[i].value;
             }
         }
+
+        sprintf(buffer, "%-22s %5d %5d\n", "PESO, VALOR:", tw, tv);
+        entry= gtk_label_new(buffer);
+        gtk_grid_attach(GTK_GRID(midbox), entry, k++, l, 1, 1);
+
+        gtk_container_add(GTK_CONTAINER(widgets->w_midgrid_nodes), midbox);
+
         printf("%-22s %5d %5d\n", "weight, value:", tw, tv);
+
+        midbox = gtk_grid_new();
+        gtk_widget_set_halign(midbox, GTK_ALIGN_CENTER);
+//        gtk_grid_set_column_spacing (GTK_GRID(midbox), 10);
 
         for (i = 0; i <= w; i++) {
             for (j = 0; j < CANTIDAD_OBJETOS; j++) {
+                sprintf(buffer, " %d ", tabla[i][j].valor);
+                entry= gtk_label_new(buffer);
+                gtk_grid_attach(GTK_GRID(midbox), entry, j, i, 1, 1);
+
                 printf("%2d %s", tabla[i][j].valor, tabla[i][j].color);
             }
             printf("\n");
@@ -282,11 +336,23 @@ void print_solution() {
         for (i = 0; i < CANTIDAD_OBJETOS; i++) {
             if (s[i]) {
                 printf("%-22s %5d %5d %5d\n", items[i].name, s[i], s[i] * items[i].weight, s[i] * items[i].value);
+
+                sprintf(buffer, "%-22s %5d %5d %5d\n", items[i].name, s[i], s[i] * items[i].weight, s[i] * items[i].value);
+                entry= gtk_label_new(buffer);
+                gtk_grid_attach(GTK_GRID(midbox), entry, k++, l, 1, 1);
+
                 tc += s[i];
                 tw += s[i] * items[i].weight;
                 tv += s[i] * items[i].value;
+
+                l++;
+                k=0;
             }
         }
+        sprintf(buffer, "%-22s %5d %5d %5d\n", "CANTIDAD, PESO, VALOR:", tc, tw, tv);
+        entry= gtk_label_new(buffer);
+        gtk_grid_attach(GTK_GRID(midbox), entry, k++, l, 1, 1);
+
         printf("%-22s %5d %5d %5d\n", "count, weight, value:", tc, tw, tv);
         //</ KNAPSACK bounded
     } else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widgets->radioUnbounded))) {
@@ -299,12 +365,28 @@ void print_solution() {
         unboundedKnapsack(w);
         for (i = 0; i < CANTIDAD_OBJETOS; i++) {
             printf("%d %s\n", best[i], items[i].name);
+
+
+            sprintf(buffer, "Llevar %d %s\n", best[i], items[i].name);
+            entry= gtk_label_new(buffer);
+            gtk_grid_attach(GTK_GRID(midbox), entry, k++, l, 1, 1);
+
+            l++;
+            k=0;
+
         }
+        sprintf(buffer, "MEJOR VALOR: %.0f\n", best_value);
+        entry= gtk_label_new(buffer);
+        gtk_grid_attach(GTK_GRID(midbox), entry, k++, l, 1, 1);
+
         printf("best value: %.0f\n", best_value);
         free(count);
         free(best);
         //</ KNAPSACK unbounded
     }
+
+    gtk_container_add(GTK_CONTAINER(widgets->w_midgrid_nodes), midbox);
+    gtk_widget_show_all(widgets->w_midgrid_nodes);
 }
 
 int main(int argc, char *argv[]) {
@@ -325,6 +407,8 @@ int main(int argc, char *argv[]) {
     file_chooser = GTK_WIDGET(gtk_builder_get_object(builder, "file_chooser"));
 
     widgets->w_grid_knapsack = GTK_WIDGET(gtk_builder_get_object(builder, "cont_grid"));
+    widgets->w_midgrid_nodes = GTK_WIDGET(gtk_builder_get_object(builder, "cont_solution"));
+
     widgets->sbtn_quantity_count = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_quantity_count"));
     widgets->sbtn_quantity_w = GTK_WIDGET(gtk_builder_get_object(builder, "sbtn_quantity_w"));
     widgets->radio10 = GTK_WIDGET(gtk_builder_get_object(builder, "radio10"));
@@ -337,6 +421,8 @@ int main(int argc, char *argv[]) {
     g_object_unref(builder);
 
     mainbox = gtk_grid_new();
+    gtk_widget_set_halign(mainbox, GTK_ALIGN_CENTER);
+    midbox = gtk_grid_new();
     gtk_widget_set_halign(mainbox, GTK_ALIGN_CENTER);
 
     item_t items[CANTIDAD_OBJETOS];
@@ -440,12 +526,14 @@ void generar_archivo() {
 }
 
 void leer_archivo() {
-    int i = 0, j;
+    int i, j = 0, k, fileSize = 0, entrySize;
     char *filename = NULL;
     GtkWidget *dialog;
     FILE *fichero;
-    int n = 10;
-    char str[n];
+    FILE *fichero2;
+
+    char str[1024];
+    char str2[1024];
 
     gtk_widget_set_sensitive(save, FALSE);
     dialog = gtk_file_chooser_dialog_new("Abrir archivo", GTK_WINDOW(window),
@@ -454,19 +542,49 @@ void leer_archivo() {
                                          ("Abrir"), GTK_RESPONSE_ACCEPT, NULL);
 
     gint answer = gtk_dialog_run(GTK_DIALOG(dialog));
-    if (answer == GTK_RESPONSE_ACCEPT) {
+    if (answer == GTK_RESPONSE_ACCEPT){
         filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         fichero = fopen(filename, "r");
+        fichero2 = fopen(filename, "r");
         printf("archivo abierto\n");
-        if (fgets(str, n, fichero) != ",") {
-            puts(str);
-        }
-    }
 
+        while (fscanf(fichero2, "%s", str2)!=EOF) {
+            i = 0;
+            fgets(str, 1024, fichero);
+
+            char delims[] = ",";
+            char *result = NULL;
+            result = strtok(str, delims);
+
+            while( result != NULL ) {
+                if (i == 0) {
+                    items[j].name = result;
+                    gtk_entry_set_text(GTK_ENTRY(w_items[j].name), result);
+                } else if (i == 1) {
+                    items[j].weight = atoi(result);
+                    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w_items[j].weight), atoi(result));
+                } else if (i == 2) {
+                    items[j].value = atoi(result);
+                    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w_items[j].value), atoi(result));
+                } else if (i == 3) {
+                    items[j].count = atoi(result);
+                    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w_items[j].count), atoi(result));
+                }
+                result = strtok(NULL, delims);
+                i++;
+            }
+            j++;
+            fileSize++;
+        }
+        entrySize = fileSize;
+        update(entrySize);
+
+    }
+    printf("salgo\n");
     gtk_widget_destroy(dialog);
     fclose(fichero);
-    g_free(filename);
-    gtk_widget_show(window);
+    fclose(fichero2);
+    g_free (filename);
 }
 
 void on_press_file_chooser() {
