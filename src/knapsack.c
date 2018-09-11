@@ -48,6 +48,8 @@ w_item_t w_items[CANTIDAD_OBJETOS_MAX];
 GtkWidget *file_chooser, *save, *mainbox, *midbox;
 app_widgets *widgets;
 GtkWidget *window;
+GtkWidget *fMatematica;
+GtkWidget *restricciones;
 
 //int n = sizeof (items) / sizeof (item_t);
 int *count;
@@ -58,6 +60,9 @@ double best_value;
 
 // A utility function that returns maximum of two integers
 int max(int a, int b) { return (a > b) ? a : b; }
+
+void update(int CANTIDAD_OBJETOS);
+//void updateAux();
 
 // Prints the items which are put in a knapsack of capacity W
 //void knapsack1_0(int W, int wt[], int val[], int n)
@@ -214,10 +219,17 @@ void update_values_knapsack(GtkEntry *entry) {
     items[i].count = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w_items[i].count));
 }
 
-void update() {
+void updateAux(){
+  CANTIDAD_OBJETOS = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widgets->sbtn_quantity_count));
+  update(CANTIDAD_OBJETOS);
+  //return CANTIDAD_OBJETOS;
+}
+
+void update(int CA_OBS) {
     int i;
 
-    CANTIDAD_OBJETOS = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widgets->sbtn_quantity_count));
+    CANTIDAD_OBJETOS = CA_OBS;
+
     w = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widgets->sbtn_quantity_w));
 
 
@@ -388,6 +400,54 @@ void print_solution() {
     gtk_container_add(GTK_CONTAINER(widgets->w_midgrid_nodes), midbox);
     gtk_widget_show_all(widgets->w_midgrid_nodes);
 }
+void forma_matematica() {
+
+  int i, j;
+  char funcion[100000];
+  char restriccion[100000];
+  char str[100];
+  char str2[100];
+
+
+  //strcat(funcion, "Z = ");
+  sprintf(funcion, "%s", "Z = ");
+  //printf("hola\n");
+  //printf("%s", funcion);
+  for (i = 0; i < CANTIDAD_OBJETOS; i++) {
+      //printf("entro\n");
+      sprintf(str, "%d", items[i].value);
+      sprintf(funcion, "%s%s", funcion, str);
+      sprintf(funcion, "%s(%s", funcion, "X");
+      //strcat(funcion, "X");
+      sprintf(funcion, "%s%s)", funcion, items[i].name);
+      //strcat(funcion, items[i].name);
+      sprintf(funcion, "%s %s", funcion, " + ");
+      //strcat(funcion, " + ");
+  }
+  printf("%s\n", funcion);
+
+  sprintf(restriccion, "%s", " ");
+  for (j = 0; j < CANTIDAD_OBJETOS; j++) {
+      sprintf(str2, "%d", items[j].weight);
+      sprintf(restriccion, "%s%s", restriccion, str2);
+      //strcat(restriccion, str2);
+      //strcat(restriccion, "X");
+      sprintf(restriccion, "%s(%s", restriccion, "X");
+      //strcat(restriccion, );
+      sprintf(restriccion, "%s%s)", restriccion, items[j].name);
+      sprintf(restriccion, "%s%s", restriccion, " + ");
+      //strcat(restriccion, " + ");
+  }
+  sprintf(restriccion, "%s%s", restriccion, " ≤ ");
+  //strcat(restriccion, " ≤ ");
+  sprintf(str2, "%d", w);
+  sprintf(restriccion, "%s%s", restriccion, str2);
+  //strcat(restriccion, str2);
+  printf("%s\n", restriccion);
+
+  gtk_label_set_text(GTK_LABEL(fMatematica), funcion);
+  gtk_label_set_text(GTK_LABEL(restricciones), restriccion);
+}
 
 int main(int argc, char *argv[]) {
     GtkBuilder *builder;
@@ -404,8 +464,6 @@ int main(int argc, char *argv[]) {
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
     gtk_builder_connect_signals(builder, NULL);
 
-    file_chooser = GTK_WIDGET(gtk_builder_get_object(builder, "file_chooser"));
-
     widgets->w_grid_knapsack = GTK_WIDGET(gtk_builder_get_object(builder, "cont_grid"));
     widgets->w_midgrid_nodes = GTK_WIDGET(gtk_builder_get_object(builder, "cont_solution"));
 
@@ -414,11 +472,15 @@ int main(int argc, char *argv[]) {
     widgets->radio10 = GTK_WIDGET(gtk_builder_get_object(builder, "radio10"));
     widgets->radioBounded = GTK_WIDGET(gtk_builder_get_object(builder, "radioBounded"));
     widgets->radioUnbounded = GTK_WIDGET(gtk_builder_get_object(builder, "radioUnbounded"));
+    fMatematica = GTK_WIDGET(gtk_builder_get_object(builder, "fMatematica"));
+    restricciones = GTK_WIDGET(gtk_builder_get_object(builder, "restricciones"));
 
     save = GTK_WIDGET(gtk_builder_get_object(builder, "save"));
     gtk_widget_set_sensitive(save, FALSE);
 
     g_object_unref(builder);
+
+
 
     mainbox = gtk_grid_new();
     gtk_widget_set_halign(mainbox, GTK_ALIGN_CENTER);
@@ -511,16 +573,17 @@ void generar_archivo() {
     if (answer == GTK_RESPONSE_ACCEPT) {
         filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         fichero = fopen(filename, "w+");
-        for (i = 0; i < CANTIDAD_OBJETOS_MAX; i++) {
+        printf("CANTIDAD_OBJETOS: %d\n", CANTIDAD_OBJETOS);
+        for (i = 0; i < CANTIDAD_OBJETOS; i++) {
             fprintf(fichero, "%s,", (char *) items[i].name);
             fprintf(fichero, "%i,", items[i].weight);
             fprintf(fichero, "%i,", items[i].value);
             fprintf(fichero, "%i", items[i].count);
             fprintf(fichero, "\n");
         }
+        fclose(fichero);
+        g_free(filename);
     }
-    fclose(fichero);
-    g_free(filename);
     gtk_widget_destroy(dialog);
     gtk_widget_set_sensitive(save, FALSE);
 }
@@ -546,7 +609,7 @@ void leer_archivo() {
         filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         fichero = fopen(filename, "r");
         fichero2 = fopen(filename, "r");
-        printf("archivo abierto\n");
+        //printf("archivo abierto\n");
 
         while (fscanf(fichero2, "%s", str2)!=EOF) {
             i = 0;
@@ -579,12 +642,13 @@ void leer_archivo() {
         entrySize = fileSize;
         update(entrySize);
 
+        fclose(fichero);
+        fclose(fichero2);
     }
-    printf("salgo\n");
+    //printf("salgo\n");
     gtk_widget_destroy(dialog);
-    fclose(fichero);
-    fclose(fichero2);
-    g_free (filename);
+
+    //g_free (filename);
 }
 
 void on_press_file_chooser() {
