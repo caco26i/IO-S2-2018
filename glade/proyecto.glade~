@@ -130,13 +130,14 @@ Dinámica</property>
         </child>
         <child>
           <object class="GtkButton" id="tba2">
-            <property name="label" translatable="yes">TBA</property>
+            <property name="label" translatable="yes">   Series
+Deportivas</property>
             <property name="width_request">95</property>
             <property name="height_request">60</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="button-press-event" handler="on_press_pending_open" swapped="no"/>
+            <signal name="button-press-event" handler="on_sports_clicked" swapped="no"/>
             <style>
               <class name="btn"/>
             </style>

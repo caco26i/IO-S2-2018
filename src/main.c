@@ -5,9 +5,9 @@
 
 GtkBuilder      *builder;
 //Declaración de ventanas
-GtkWidget      *window, *about_window, *pending_rutas_cortas, *pending_knapsack, *pending_tba2, *pending_tba3, *pending_tba4;
+GtkWidget      *window, *about_window, *pending_rutas_cortas, *pending_knapsack, *pending_deportivas, *pending_tba3, *pending_tba4;
 //Declaración de botones
-GtkWidget       *rutas_cortas_btn, *knapsack_btn, *tba2_btn, *tba3_btn, *tba4_btn;
+GtkWidget       *rutas_cortas_btn, *knapsack_btn, *deportivas_btn, *tba3_btn, *tba4_btn;
 //Declaración de tooltips
 GtkWidget       *tt_tba0, *tt_tba1, *tt_tba2, *tt_tba3, *tt_tba4;
 
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
     rutas_cortas_btn = GTK_WIDGET(gtk_builder_get_object(builder, "rutas_cortas"));
     knapsack_btn = GTK_WIDGET(gtk_builder_get_object(builder, "knapsack"));
-    tba2_btn = GTK_WIDGET(gtk_builder_get_object(builder, "tba2"));
+    deportivas_btn = GTK_WIDGET(gtk_builder_get_object(builder, "deportivas"));
     tba3_btn = GTK_WIDGET(gtk_builder_get_object(builder, "tba3"));
     tba4_btn = GTK_WIDGET(gtk_builder_get_object(builder, "tba4"));
 
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     about_window = GTK_WIDGET(gtk_builder_get_object(builder, "about_window"));
     pending_rutas_cortas = GTK_WIDGET(gtk_builder_get_object(builder, "pending_rutas_cortas"));
     pending_knapsack = GTK_WIDGET(gtk_builder_get_object(builder, "pending_knapsack"));
-    pending_tba2 = GTK_WIDGET(gtk_builder_get_object(builder, "pending_tba2"));
+    pending_deportivas = GTK_WIDGET(gtk_builder_get_object(builder, "pending_deportivas"));
     pending_tba3 = GTK_WIDGET(gtk_builder_get_object(builder, "pending_tba3"));
     pending_tba4 = GTK_WIDGET(gtk_builder_get_object(builder, "pending_tba4"));
     gtk_builder_connect_signals(builder, NULL);
@@ -93,6 +93,11 @@ void on_press_floyd_open()
 void on_knapsack_clicked()
 {
   system("./knapsack &");
+}
+
+void on_sports_clicked()
+{
+  system("./deportivas &");
 }
 
 // called when about menu button is clicked
