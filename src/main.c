@@ -38,9 +38,9 @@ int main(int argc, char *argv[])
     tt_tba4 = GTK_WIDGET(gtk_builder_get_object(builder, "tt_tba4"));
 
     //Elementos de tooltip
-    gtk_widget_set_tooltip_text(tt_tba0, "Se utiliza el algoritmo X para encontrar las rutas más cortas");
-    gtk_widget_set_tooltip_text(tt_tba1, "Algoritmo de optimización de objetos o de la mochila");
-    gtk_widget_set_tooltip_text(tt_tba2, "Este algoritmo se encuentra en construcción");
+    gtk_widget_set_tooltip_text(tt_tba0, "Algoritmo de análisis sobre grafos para encontrar el camino mínimo en grafos dirigidos ponderados. El algoritmo encuentra el camino entre todos los pares de vértices en una única ejecución");
+    gtk_widget_set_tooltip_text(tt_tba1, "Algoritmo que modela una situación análoga al llenar una mochila, incapaz de soportar más de un peso determinado, con todo o parte de un conjunto de objetos, cada uno con un peso y valor específicos. Los objetos colocados en la mochila deben maximizar el valor total sin exceder el peso máximo");
+    gtk_widget_set_tooltip_text(tt_tba2, "Algoritmo que por medio de probabilidades, calcula la probabilidad de cierto equipo de basketball gane una serie de juegos de X cantidad de juegos.");
     gtk_widget_set_tooltip_text(tt_tba3, "Este algoritmo se encuentra en construcción");
     gtk_widget_set_tooltip_text(tt_tba4, "Este algoritmo se encuentra en construcción");
 
