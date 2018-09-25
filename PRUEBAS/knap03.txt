@@ -1,3 +1,0 @@
-Agua,4,1,2
-Calcetines,3,7,2
-Galletas,5,12,2
