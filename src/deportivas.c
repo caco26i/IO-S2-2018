@@ -173,6 +173,7 @@ void createTableHV() {
     g_list_free(children);
 
     tableHV = gtk_grid_new();
+
     gtk_container_add(GTK_CONTAINER(scrolleGameSerieH), tableHV);
 
     char text[14];
@@ -198,7 +199,7 @@ void createTableHV() {
 int loadData(char *filename) {
     infoFile = fopen(filename, "r");
     if (infoFile != NULL) {
-        fscanf(infoFile, "%i", &inputCantGames);
+        fscanf(infoFile, "%d", &inputCantGames);
         fscanf(infoFile, "%f", &inputPH);
         fscanf(infoFile, "%f", &inputPV);
         fscanf(infoFile, "%s", loadGame);
@@ -294,8 +295,8 @@ void createTableHV1() {
     char text[14];
     char number[4];
 
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinButtonGame), inputCantGames);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinButtonGamePH), inputPH);
-
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinButtonGamePV), inputPV);
 
 
@@ -351,7 +352,7 @@ void leer_archivo() {
             gtk_widget_hide(windowInitial);
             createTableHV1();
 
-            gtk_widget_show_all(windowCreateData);
+            gtk_widget_show_all(scrolleGameSerieH);
         }
         /*entrySize = fileSize;
         update(entrySize);
