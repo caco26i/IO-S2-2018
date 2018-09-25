@@ -11,7 +11,7 @@ GtkWidget *save;
 
 #define gtk_spin_button_get_value_as_float gtk_spin_button_get_value
 
-GtkBuilder *myBuilder;
+GtkBuilder *builder;
 GtkWidget *windowInitial;
 GtkWidget *windowCreateData;
 GtkWidget *windowFinal;
@@ -360,11 +360,16 @@ void leer_archivo() {
 
 
 void createGame() {
+    printf("DEBUG\n\n");
+
     gtk_widget_hide(windowInitial);
     inputCantGames = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonGame));
+    float inputCantGames2 = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePH));
+    float inputCantGames3 = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePV));
+    printf("TEST %d - %f - %f\n\n", inputCantGames, inputCantGames2, inputCantGames3);
     createTableHV();
 
-    gtk_widget_show_all(windowCreateData);
+    gtk_widget_show_all(window);
 }
 
 
@@ -410,36 +415,36 @@ int main(int argc, char *argv[]) {
     builder = gtk_builder_new();
     gtk_builder_add_from_file(builder, "glade/deportivas.glade", NULL);
 
-    windowInitial = GTK_WIDGET(gtk_builder_get_object(myBuilder, "window_series"));
-    windowCreateData = GTK_WIDGET(gtk_builder_get_object(myBuilder, "window_create_data_series"));
-    windowFinal = GTK_WIDGET(gtk_builder_get_object(myBuilder, "window_final_series"));
+    windowInitial = GTK_WIDGET(gtk_builder_get_object(builder, "window_series"));
+    windowCreateData = GTK_WIDGET(gtk_builder_get_object(builder, "window_create_data_series"));
+    windowFinal = GTK_WIDGET(gtk_builder_get_object(builder, "window_final_series"));
 
-    spinButtonGame = GTK_WIDGET(gtk_builder_get_object(myBuilder, "spinButtonGame"));
+    spinButtonGame = GTK_WIDGET(gtk_builder_get_object(builder, "spinButtonGame"));
     gtk_spin_button_set_range(GTK_SPIN_BUTTON(spinButtonGame), 1, 99);
     gtk_spin_button_set_increments(GTK_SPIN_BUTTON(spinButtonGame), 2, 3);
 
-    spinButtonGamePH = GTK_WIDGET(gtk_builder_get_object(myBuilder, "spinButtonGamePH"));
+    spinButtonGamePH = GTK_WIDGET(gtk_builder_get_object(builder, "spinButtonGamePH"));
     gtk_spin_button_set_range(GTK_SPIN_BUTTON(spinButtonGamePH), 0, 1);
     gtk_spin_button_set_increments(GTK_SPIN_BUTTON(spinButtonGamePH), 0.01, 1);
 
-    spinButtonGamePV = GTK_WIDGET(gtk_builder_get_object(myBuilder, "spinButtonGamePV"));
+    spinButtonGamePV = GTK_WIDGET(gtk_builder_get_object(builder, "spinButtonGamePV"));
     gtk_spin_button_set_range(GTK_SPIN_BUTTON(spinButtonGamePV), 0, 1);
     gtk_spin_button_set_increments(GTK_SPIN_BUTTON(spinButtonGamePV), 0.01, 1);
 
-    execGameButton = GTK_WIDGET(gtk_builder_get_object(myBuilder, "execute_serie"));
+    execGameButton = GTK_WIDGET(gtk_builder_get_object(builder, "execute_serie"));
 
-    scrolleGameSerieH = GTK_WIDGET(gtk_builder_get_object(myBuilder, "scrolleGameSerieH"));
-    saveFileButton = GTK_WIDGET(gtk_builder_get_object(myBuilder, "saveFileButton"));
-    filenameEntry = GTK_WIDGET(gtk_builder_get_object(myBuilder, "filenameEntry"));
+    scrolleGameSerieH = GTK_WIDGET(gtk_builder_get_object(builder, "scrolleGameSerieH"));
+    saveFileButton = GTK_WIDGET(gtk_builder_get_object(builder, "saveFileButton"));
+    filenameEntry = GTK_WIDGET(gtk_builder_get_object(builder, "filenameEntry"));
 
-    scrolledTableSerie = GTK_WIDGET(gtk_builder_get_object(myBuilder, "gtkScrolledWindowTableSerie"));
-    chooseFileButton = GTK_WIDGET(gtk_builder_get_object(myBuilder, "chooseFileButton"));
-    loadFileButton = GTK_WIDGET(gtk_builder_get_object(myBuilder, "loadFileButton"));
+    scrolledTableSerie = GTK_WIDGET(gtk_builder_get_object(builder, "gtkScrolledWindowTableSerie"));
+    chooseFileButton = GTK_WIDGET(gtk_builder_get_object(builder, "chooseFileButton"));
+    loadFileButton = GTK_WIDGET(gtk_builder_get_object(builder, "loadFileButton"));
 
-    windowSave = GTK_WIDGET(gtk_builder_get_object(myBuilder, "windowSave"));
+    windowSave = GTK_WIDGET(gtk_builder_get_object(builder, "windowSave"));
 
-    labelA = GTK_WIDGET(gtk_builder_get_object(myBuilder, "PH1"));
-    labelB = GTK_WIDGET(gtk_builder_get_object(myBuilder, "PH2"));
+    labelA = GTK_WIDGET(gtk_builder_get_object(builder, "PH1"));
+    labelB = GTK_WIDGET(gtk_builder_get_object(builder, "PH2"));
 
     //Inicialización de widgets
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
@@ -448,7 +453,7 @@ int main(int argc, char *argv[]) {
 
     g_object_unref(builder);
 
-    gtk_widget_show_all(windowInitial);
+    gtk_widget_show_all(window);
     gtk_widget_show(window);
     gtk_main();
 
