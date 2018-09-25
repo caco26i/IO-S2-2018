@@ -2,600 +2,298 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
-
-#include <glib.h>
-#include <gtk/gtk.h>
-
+#include <math.h>
 
 //Declaración de ventanas
 GtkWidget *window;
 
-GtkBuilder *builder;
-GtkWidget *cantJuegos;
-GtkWidget *g_Ph;
-GtkWidget *g_Pr;
-GtkWidget *Acept;
-GtkWidget *btn_cargar;
 
-GtkWidget *juego1;
-GtkWidget *juego2;
-GtkWidget *juego3;
-GtkWidget *juego4;
-GtkWidget *juego5;
-GtkWidget *juego6;
-GtkWidget *juego7;
-GtkWidget *juego8;
-GtkWidget *juego9;
-GtkWidget *juego10;
-GtkWidget *juego11;
+#define gtk_spin_button_get_value_as_float gtk_spin_button_get_value
 
-GtkWidget *probabilidades1;
-GtkWidget *probabilidades2;
-GtkWidget *result;
-GtkWidget *entry_cargar;
-GtkWidget *btn_calcular;
-
-GtkWidget *folder;
+GtkBuilder *myBuilder;
+GtkWidget *windowInitial;
+GtkWidget *windowCreateData;
+GtkWidget *windowFinal;
+//initiial
+GtkWidget *loadFileButton;
+GtkWidget *chooseFileButton;
+GtkWidget *spinButtonGame;
+GtkWidget *spinButtonGamePH;
+GtkWidget *spinButtonGamePV;
+GtkWidget *saveFileButton;
 GtkWidget *filenameEntry;
-GtkWidget *guardar;
+GtkWidget *windowSave;
+GtkWidget *labelA;
+GtkWidget *labelB;
 
+//final
+GtkWidget ***tableP0;
+GtkWidget *scrolledTableSerie;
+GtkWidget *tableP;
 
-GtkWidget *SalirDelPrograma;
+//create Data
+GtkWidget *execGameButton;
+GtkWidget *scrolleGameSerieH;
+GtkWidget **tableHV0;
+GtkWidget *tableHV;
 
-GtkWidget *datos;
-GtkWidget *tabla_sol;
-GtkWidget *tabla_nuevo;
-GtkWidget *grid2;
+//Guardar Archivo
+FILE *infoFile;
 
+char loadGame[1000];
 
-GtkWidget *label;
-GtkWidget *box;
+int inputCantGames;
 
-int mitadJuegos = 3;
-int totalJuegos = 3;
-float ph = 0;
-float pr = 0;
-float qh = 0;
-float qr = 0;
+float inputPH;
+float inputPV;
 
-float **tabla;
-float resp;
+int juegosCasa[1000];
+int juegosAGanar;
 
-
-int lugar_juego[11];
-
-float mat[10][10];
-
-//Declaración de funciones
-void myCSS(void);
-
-
-void on_SalirDelPrograma_clicked() {
-    gtk_widget_destroy(window);
+void llenarSeries() {
+    for (int i = 0; i < inputCantGames; i++) {
+        juegosCasa[i] = 0;
+    }
 }
 
+int calcularJuegosAGanar(int totalJuegos) {
+    int mitadJuegos = totalJuegos / 2;
+    return mitadJuegos + 1;
+}
 
-void CrearTabla() {
-    int i, j;
+void casosBase(float matrix[juegosAGanar + 1][juegosAGanar + 1], int tamMatriz) {
+    for (int i = 0; i < tamMatriz; i++) {
+        matrix[0][i] = 1.0;
+        matrix[i][0] = 0.0;
+    }
+}
 
-    GList *children, *iter;
+void llenarMatriz(float matrix[juegosAGanar + 1][juegosAGanar + 1], int tamMatriz) {
+    for (int i = 1; i < tamMatriz; i++) {
+        for (int j = 1; j < tamMatriz; j++) {
+            int juegoActual = juegosAGanar - i + juegosAGanar - j;
 
-    children = gtk_container_get_children(GTK_CONTAINER(tabla_sol));
-    for (iter = children; iter != NULL; iter = g_list_next(iter))
-        gtk_widget_destroy(GTK_WIDGET(iter->data));
-    g_list_free(children);
-
-
-    grid2 = gtk_grid_new();
-    gtk_grid_set_row_spacing(GTK_GRID(grid2), 2);
-    gtk_grid_set_column_spacing(GTK_GRID(grid2), 2);
-
-
-    for (i = -1; i < (mitadJuegos); i++) {
-        for (j = -1; j < (mitadJuegos); j++) {
-            if (i == -1) {
-                if (j == -1) {
-                    label = gtk_label_new("");
-                    gtk_widget_set_size_request(label, 470 / (mitadJuegos + 2), 470 / (mitadJuegos + 2));
-
-                    box = gtk_box_new(0, 0);
-                    gtk_box_pack_start(GTK_BOX(box), label, 0, 0, 0);
-                    const GdkRGBA *color;
-
-
-                    gtk_grid_attach(GTK_GRID(grid2), box, j + 1, i + 1, 1, 1);
-
-                    gtk_widget_show(label);
-                    gtk_widget_show(box);
-
-                } else {
-                    char val[30];
-                    sprintf(val, "%d", j);
-
-                    label = gtk_label_new(val);
-                    gtk_widget_set_size_request(label, 470 / (mitadJuegos + 2), 470 / (mitadJuegos + 2));
-
-                    box = gtk_box_new(0, 0);
-                    gtk_box_pack_start(GTK_BOX(box), label, 0, 0, 0);
-                    const GdkRGBA *color;
-
-//                    gdk_rgba_parse(color, "#00BFFF");
-//                    gtk_widget_modify_bg(box, GTK_STATE_NORMAL, &color);
-                    gtk_grid_attach(GTK_GRID(grid2), box, j + 1, i + 1, 1, 1);
-
-                    gtk_widget_show(label);
-                    gtk_widget_show(box);
-                }
+            if (juegosCasa[juegoActual] == 1) {
+                matrix[i][j] = (inputPH * matrix[i - 1][j]) + ((1 - inputPH) * matrix[i][j - 1]);
             } else {
-                if (j == -1) {
-                    char val[30];
-                    sprintf(val, "%d", i);
-
-                    label = gtk_label_new(val);
-                    gtk_widget_set_size_request(label, 470 / (mitadJuegos + 2), 470 / (mitadJuegos + 2));
-
-                    box = gtk_box_new(0, 0);
-                    gtk_box_pack_start(GTK_BOX(box), label, 0, 0, 0);
-                    const GdkRGBA *color;
-
-//                    gdk_rgba_parse("#00BFFF", &color);
-//                    gtk_widget_modify_bg(box, GTK_STATE_NORMAL, &color);
-                    gtk_grid_attach(GTK_GRID(grid2), box, j + 1, i + 1, 1, 1);
-
-                    gtk_widget_show(label);
-                    gtk_widget_show(box);
-                } else {
-                    if ((j == 0) && (i == 0)) {
-                        label = gtk_label_new("");
-                        gtk_widget_set_size_request(label, 470 / (mitadJuegos + 2), 470 / (mitadJuegos + 2));
-
-                        box = gtk_box_new(0, 0);
-                        gtk_box_pack_start(GTK_BOX(box), label, 0, 0, 0);
-                        const GdkRGBA *color;
-//
-//                        gdk_rgba_parse("#A9D0F5", &color);
-//                        gtk_widget_modify_bg(box, GTK_STATE_NORMAL, &color);
-                        gtk_grid_attach(GTK_GRID(grid2), box, j + 1, i + 1, 1, 1);
-
-                        gtk_widget_show(label);
-                        gtk_widget_show(box);
-                    }
-
-                    if ((i == mitadJuegos - 1) && (j == mitadJuegos - 1)) {
-                        char val[30];
-                        sprintf(val, "%.*f", 4, tabla[i][j]);
-
-                        label = gtk_label_new(val);
-                        gtk_widget_set_size_request(label, 470 / (mitadJuegos + 2), 470 / (mitadJuegos + 2));
-
-                        box = gtk_box_new(0, 0);
-                        gtk_box_pack_start(GTK_BOX(box), label, 0, 0, 0);
-                        const GdkRGBA *color;
-//
-//                        gdk_rgba_parse("#FE2E64", &color);
-//                        gtk_widget_modify_bg(box, GTK_STATE_NORMAL, &color);
-                        gtk_grid_attach(GTK_GRID(grid2), box, j + 1, i + 1, 1, 1);
-
-                        gtk_widget_show(label);
-                        gtk_widget_show(box);
-
-                    } else {
-                        char val[30];
-                        sprintf(val, "%.*f", 4, tabla[i][j]);
-
-
-                        label = gtk_label_new(val);
-                        gtk_widget_set_size_request(label, 470 / (mitadJuegos + 2), 470 / (mitadJuegos + 2));
-
-                        box = gtk_box_new(0, 0);
-                        gtk_box_pack_start(GTK_BOX(box), label, 0, 0, 0);
-                        const GdkRGBA *color;
-
-//                        gdk_rgba_parse("#A9D0F5", &color);
-//                        gtk_widget_modify_bg(box, GTK_STATE_NORMAL, &color);
-                        gtk_grid_attach(GTK_GRID(grid2), box, j + 1, i + 1, 1, 1);
-
-                        gtk_widget_show(label);
-                        gtk_widget_show(box);
-                    }
-                }
+                matrix[i][j] = (inputPV * matrix[i - 1][j]) + ((1 - inputPV) * matrix[i][j - 1]);
             }
         }
     }
-
-    gtk_container_add(GTK_CONTAINER(tabla_sol), grid2);
-    gtk_widget_show(grid2);
-
 }
 
-float** createFloatMatrix(int rows, int columns)
-{
-    int i;
-
-    float **matrix = (float **) calloc(rows, sizeof(float *));
-    for (i = 0; i < rows; i++)
-    {
-        matrix[i] = (float *) calloc(columns, sizeof(float));
+void imprimirMatriz(float matrix[juegosAGanar + 1][juegosAGanar + 1]) {
+    for (int i = 0; i < juegosAGanar + 1; i++) {
+        for (int j = 0; j < juegosAGanar + 1; j++) {
+            printf("%f    ", matrix[i][j]);
+        }
     }
-
-    return matrix;
 }
 
-int on_btn_calcular_clicked() {
-    if (ph == 0 && pr == 0) {
-        gtk_label_set_text(GTK_LABEL(result), "Los campos no pueden estar vacíos.");
-        return 0;
+
+void createInfoFile(char *filename) {
+    infoFile = fopen(filename, "w+");
+    fprintf(infoFile, "%d\n", inputCantGames);
+    fprintf(infoFile, "%f\n", inputPH);
+    fprintf(infoFile, "%f\n", inputPV);
+
+    for (int i = 0; i < inputCantGames; i++) {
+        fprintf(infoFile, "%d", juegosCasa[i]);
     }
-    for (int i = 0; i < totalJuegos; i++) {
-        if (lugar_juego[i] == 0) {
-            gtk_label_set_text(GTK_LABEL(result), "Falta un formato de la serie.");
-            return 0;
+
+    fclose(infoFile);
+}
+
+
+void createTable() {
+    tableP0 = calloc(10, sizeof(GtkWidget * *));
+    tableP = gtk_grid_new();
+    for (int j = 0; j < 10; j++) {
+        tableP0[j] = calloc(10, sizeof(GtkWidget * ));
+    }
+
+    llenarSeries();
+
+    for (int i = 0; i < inputCantGames; i++) {
+        if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tableHV0[i]))) {
+            juegosCasa[i] = 1;
+        } else {
+            juegosCasa[i] = 0;
         }
     }
 
-    tabla = createFloatMatrix(mitadJuegos, mitadJuegos);
+    juegosAGanar = calcularJuegosAGanar(inputCantGames);
+    float matrix[juegosAGanar + 1][juegosAGanar + 1];
+    casosBase(matrix, juegosAGanar + 1);
+    llenarMatriz(matrix, juegosAGanar + 1);
 
-    for (int i = 0; i < mitadJuegos; i++) {
-        for (int j = 0; j < mitadJuegos; j++) {
-            if (j == 0) {
-                tabla[i][j] = 0;
-                continue;
+    gtk_container_add(GTK_CONTAINER(scrolledTableSerie), tableP);
+
+    for (int i = 0; i < juegosAGanar + 1; i++) {
+        for (int j = 0; j < juegosAGanar + 1; j++) {
+            char number[14];
+            sprintf(number, "%.4f", matrix[i][j]);
+
+            tableP0[i][j] = gtk_entry_new();
+            gtk_entry_set_text(GTK_ENTRY(tableP0[i][j]), number);
+            gtk_entry_set_width_chars(GTK_ENTRY(tableP0[i][j]), 8);
+            gtk_grid_attach(GTK_GRID(tableP), tableP0[i][j], j, i, 1, 1);
+            gtk_widget_set_sensitive(tableP0[i][j], FALSE);
+
+        }
+    }
+
+    char numberA[14];
+    sprintf(numberA, "%.4f", matrix[juegosAGanar][juegosAGanar]);
+
+    char probA[1000] = "La probabilidad de A\nde ganar es: ";
+    strcat(probA, numberA);
+
+    gtk_label_set_text(GTK_LABEL(labelA), probA);
+
+    char numberB[14];
+    sprintf(numberB, "%.4f", 1 - matrix[juegosAGanar][juegosAGanar]);
+
+    char probB[1000] = "La probabilidad de B\nde ganar es: ";
+    strcat(probB, numberB);
+
+    gtk_label_set_text(GTK_LABEL(labelB), probB);
+}
+
+void createTableHV() {
+    tableHV0 = calloc(inputCantGames, sizeof(GtkWidget * ));
+    tableHV = gtk_grid_new();
+
+    gtk_container_add(GTK_CONTAINER(scrolleGameSerieH), tableHV);
+
+    char text[14];
+    char number[4];
+
+
+    for (int j = 0; j < inputCantGames; j++) {
+
+        strcpy(text, "Game ");
+        sprintf(number, "%d", j + 1);
+        strcat(text, number);
+        tableHV0[j] = gtk_check_button_new_with_label(text);
+        gtk_grid_attach(GTK_GRID(tableHV), tableHV0[j], j % 5, j / 5, 1, 1);
+        memset(text, '\0', strlen(text));
+    }
+}
+
+int loadData(char *filename) {
+    infoFile = fopen(filename, "r");
+    if (infoFile != NULL) {
+        fscanf(infoFile, "%i", &inputCantGames);
+        fscanf(infoFile, "%f", &inputPH);
+        fscanf(infoFile, "%f", &inputPV);
+        fscanf(infoFile, "%s", loadGame);
+
+        fclose(infoFile);
+        return 1;
+    }
+    return 0;
+}
+
+void saveFile() {
+    char filename[1000] = "examples/series/";
+
+    int len = gtk_entry_get_text_length(GTK_ENTRY(filenameEntry));
+    if (len != 0) {
+
+        strcat(filename, gtk_entry_get_text(GTK_ENTRY(filenameEntry)));
+        strcat(filename, ".txt");
+
+
+        inputPH = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePH));
+        inputPV = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePV));
+        for (int i = 0; i < inputCantGames; i++) {
+            if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tableHV0[i]))) {
+                juegosCasa[i] = 1;
+            } else {
+                juegosCasa[i] = 0;
             }
-            if (i == 0) {
-                tabla[i][j] = 1;
-                continue;
-            }
-            if (lugar_juego[totalJuegos - 1 - (i + j - 2)] == 1) {
-                tabla[i][j] = ph * tabla[i - 1][j] + qr * tabla[i][j - 1];
-            }
-
-            if (lugar_juego[totalJuegos - 1 - (i + j - 2)] == 2) {
-                tabla[i][j] = pr * tabla[i - 1][j] + qh * tabla[i][j - 1];
-            }
-
-
         }
 
+        createInfoFile(filename);
+
+        gtk_entry_set_text(GTK_ENTRY(filenameEntry), "");
+
+        gtk_widget_show_all(windowSave);
     }
-
-    char val[120];
-    strcpy(val, "La probabilidad de que A gane la serie es de: ");
-    char v[30];
-    sprintf(v, "%f", tabla[mitadJuegos - 1][mitadJuegos - 1]);
-    strcat(val, v);
-
-    CrearTabla();
-
-
-    gtk_label_set_text(GTK_LABEL(result), val);
 }
 
 
-void writeFile(char *filename) {
+void createTableHV1() {
+    tableHV0 = calloc(inputCantGames, sizeof(GtkWidget * ));
+    tableHV = gtk_grid_new();
 
-    FILE *file;
-    file = fopen(filename, "w");
+    gtk_container_add(GTK_CONTAINER(scrolleGameSerieH), tableHV);
+
+    char text[14];
+    char number[4];
+
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinButtonGamePH), inputPH);
+
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinButtonGamePV), inputPV);
 
 
-    fprintf(file, "%i\n", mitadJuegos);
-    fprintf(file, "%i\n", totalJuegos);
-    fprintf(file, "%f\n", ph);
-    fprintf(file, "%f\n", pr);
-    fprintf(file, "%f\n", qh);
-    fprintf(file, "%f\n", qr);
+    for (int j = 0; j < inputCantGames; j++) {
 
-    for (int i = 0; i < totalJuegos; i++) {
-        fprintf(file, "%i\n", lugar_juego[i]);
+        strcpy(text, "Game ");
+        sprintf(number, "%d", j + 1);
+        strcat(text, number);
+        tableHV0[j] = gtk_check_button_new_with_label(text);
+        gtk_grid_attach(GTK_GRID(tableHV), tableHV0[j], j % 5, j / 5, 1, 1);
+        memset(text, '\0', strlen(text));
     }
 
-    fclose(file);
-}
-
-int on_guardar_clicked() {
-    char filename[250];
-
-    const char *name = gtk_entry_get_text(GTK_ENTRY(filenameEntry));
-
-    if (strlen(name) == 0) {
-        gtk_label_set_text(GTK_LABEL(result), "Escriba el nombre del archivo.");
-        return 0;
-    }
-
-    char *folderfile = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(folder));
-    if (folderfile == NULL) {
-        gtk_label_set_text(GTK_LABEL(result), "Selecione un folder.");
-        return 0;
-    }
-
-    sprintf(filename, "%s/%s", folderfile, name);
-
-    writeFile(filename);
-
-    gtk_entry_set_text(GTK_ENTRY(filenameEntry), "");
-    gtk_label_set_text(GTK_LABEL(result), "Se guardó exitosamente.");
-
-}
-void readFile(char *filename) {
-
-
-    FILE *file;
-    file = fopen(filename, "r");
-
-    fscanf(file, "%i", &mitadJuegos);
-    fscanf(file, "%i", &totalJuegos);
-    fscanf(file, "%f", &ph);
-    fscanf(file, "%f", &pr);
-    fscanf(file, "%f", &qh);
-    fscanf(file, "%f", &qr);
-
-
-    int i = 0;
-
-    while (i < totalJuegos) {
-        fscanf(file, "%i", &lugar_juego[i]);
-        i++;
-    }
-
-    fclose(file);
-
-
-    if (totalJuegos == 3) {
-        gtk_combo_box_set_active(GTK_COMBO_BOX(cantJuegos), 0);
-    }
-    if (totalJuegos == 5) {
-        gtk_combo_box_set_active(GTK_COMBO_BOX(cantJuegos), 1);
-    }
-    if (totalJuegos == 7) {
-        gtk_combo_box_set_active(GTK_COMBO_BOX(cantJuegos), 2);
-    }
-    if (totalJuegos == 9) {
-        gtk_combo_box_set_active(GTK_COMBO_BOX(cantJuegos), 3);
-    }
-    if (totalJuegos == 11) {
-        gtk_combo_box_set_active(GTK_COMBO_BOX(cantJuegos), 4);
-    }
-
-    gtk_combo_box_set_active(GTK_COMBO_BOX(juego1), lugar_juego[0]);
-//    gtk_combo_box_set_active(juego2, lugar_juego[1]);
-//    gtk_combo_box_set_active(juego3, lugar_juego[2]);
-//    gtk_combo_box_set_active(juego4, lugar_juego[3]);
-//    gtk_combo_box_set_active(juego5, lugar_juego[4]);
-//    gtk_combo_box_set_active(juego6, lugar_juego[5]);
-//    gtk_combo_box_set_active(juego7, lugar_juego[6]);
-//    gtk_combo_box_set_active(juego8, lugar_juego[7]);
-//    gtk_combo_box_set_active(juego9, lugar_juego[8]);
-//    gtk_combo_box_set_active(juego10, lugar_juego[9]);
-//    gtk_combo_box_set_active(juego11, lugar_juego[10]);
-
-    char array[10];
-
-    int pht = ph * 10000;
-    int prt = pr * 10000;
-
-
-    snprintf(array, sizeof(array), "0.%d", pht);
-    gtk_entry_set_text(GTK_ENTRY(g_Ph), array);
-
-    snprintf(array, sizeof(array), "0.%d", prt);
-    gtk_entry_set_text(GTK_ENTRY(g_Pr), array);
-
-    char val[40];
-    strcpy(val, "Ph = ");
-    char v[12];
-    sprintf(v, "%f", ph);
-    strcat(val, v);
-
-    strcat(val, "\n");
-
-    strcat(val, "Pr = ");
-    char v1[12];
-    sprintf(v1, "%f", pr);
-
-    strcat(val, v1);
-
-    gtk_label_set_text(GTK_LABEL(probabilidades1), val);
-
-    strcpy(val, "Qh = ");
-    char v2[12];
-    sprintf(v2, "%f", qh);
-    strcat(val, v2);
-
-    strcat(val, "\n");
-
-    strcat(val, "Qr = ");
-    char v3[8];
-    sprintf(v3, "%f", qr);
-    strcat(val, v3);
-
-    gtk_label_set_text(GTK_LABEL(probabilidades2), val);
-
-}
-
-
-int on_btn_cargar_clicked() {
-    const gchar *filename;
-    filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(entry_cargar));
-    if (filename == NULL) {
-        gtk_label_set_text(GTK_LABEL(result), "Selecione un archivo.");
-        return 0;
-    }
-    readFile((char *) filename);
-}
-
-float stof(const char *s) {
-    float rez = 0, fact = 1;
-    if (*s == '-') {
-        s++;
-        fact = -1;
-    };
-    for (int point_seen = 0; *s; s++) {
-        if (*s == '.') {
-            point_seen = 1;
-            continue;
-        };
-        int d = *s - '0';
-        if (d >= 0 && d <= 9) {
-            if (point_seen) fact /= 10.0f;
-            rez = rez * 10.0f + (float) d;
-        };
-    };
-    return rez * fact;
-};
-
-int on_Acept_clicked() {
-
-    const gchar *phS;
-    phS = gtk_entry_get_text(GTK_ENTRY(g_Ph));
-    ph = stof(phS);
-    const gchar *prS;
-    prS = gtk_entry_get_text(GTK_ENTRY(g_Pr));
-    pr = stof(prS);
-
-    if (strlen(phS) == 0 || strlen(prS) == 0) {
-        gtk_label_set_text(GTK_LABEL(result), "Los campos no pueden estar vacíos.");
-        return 0;
-    }
-    for (int i = 0; i < strlen(phS); i++) {
-
-        if (phS[i] == '.') {
-            continue;
-        }
-        if (isdigit(phS[i]) == FALSE) {
-            gtk_label_set_text(GTK_LABEL(result), "ph y pr tiene que ser entre 0 y 1.");
-            return 0;
+    for (int i = 0; i < inputCantGames; ++i) {
+        if (loadGame[i] == '1') {
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tableHV0[i]), TRUE);
+        } else {
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tableHV0[i]), FALSE);
         }
     }
-    for (int i = 0; i < strlen(prS); i++) {
-        if (prS[i] == '.') {
-            continue;
-        }
-        if (isdigit(prS[i]) == FALSE) {
-            gtk_label_set_text(GTK_LABEL(result), "ph y pr tiene que ser entre 0 y 1.");
-            return 0;
-        }
-    }
+}
 
-    if ((ph >= 0 && ph <= 1) && (pr >= 0 && pr <= 1)) {
-        qr = 1 - ph;
-        qh = 1 - pr;
-        gtk_label_set_text(GTK_LABEL(result), "");
+int loadFile() {
+    char *filename;
+    filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(chooseFileButton));
+    int flag = loadData(filename);
+
+    return flag;
+}
+
+void createGameFile() {
+    if (loadFile() == 1) {
+        gtk_widget_hide(windowInitial);
+        createTableHV1();
+
+        gtk_widget_show_all(windowCreateData);
     } else {
 
-        gtk_label_set_text(GTK_LABEL(result), "ph y pr tiene que ser entre 0 y 1.");
-        return 0;
-    }
-
-
-    char val[40];
-    strcpy(val, "Ph = ");
-    char v[12];
-    sprintf(v, "%f", ph);
-    strcat(val, v);
-
-    strcat(val, "\n");
-
-    strcat(val, "Pr = ");
-    char v1[12];
-    sprintf(v1, "%f", pr);
-
-    strcat(val, v1);
-
-    gtk_label_set_text(GTK_LABEL(probabilidades1), val);
-
-    strcpy(val, "Qh = ");
-    char v2[12];
-    sprintf(v2, "%f", qh);
-    strcat(val, v2);
-
-    strcat(val, "\n");
-
-    strcat(val, "Qr = ");
-    char v3[8];
-    sprintf(v3, "%f", qr);
-    strcat(val, v3);
-
-    gtk_label_set_text(GTK_LABEL(probabilidades2), val);
-
-}
-
-void on_juego1_changed(GtkWidget *widget, GtkWidget *widget2) {
-
-    GtkComboBox *combo_box = GTK_COMBO_BOX(widget);
-    /*gint pos = gtk_combo_box_get_active (combo_box);
-    gint first = 0;
-    gtk_widget_get_active(widget);*/
-    /*if(pos != first){
-        gtk_widget_set_sensitive (widget2, TRUE);
-    }*/
-    lugar_juego[0] = gtk_combo_box_get_active(combo_box);
-
-
-}
-
-void on_cantJuegos_changed(GtkWidget *widget) {
-    //gtk_widget_set_sensitive (widget2, TRUE);
-    mitadJuegos = 3;
-    GtkComboBox *combo_box = GTK_COMBO_BOX(widget);
-    switch (gtk_combo_box_get_active(combo_box)) {
-        case 0:
-            mitadJuegos = 3;
-            break;
-        case 1:
-            mitadJuegos = 4;
-            break;
-        case 2:
-            mitadJuegos = 5;
-            break;
-        case 3:
-            mitadJuegos = 6;
-            break;
-        case 4:
-            mitadJuegos = 7;
-            break;
-
-    }
-    switch (gtk_combo_box_get_active(combo_box)) {
-        case 0:
-            totalJuegos = 3;
-            break;
-        case 1:
-            totalJuegos = 5;
-            break;
-        case 2:
-            totalJuegos = 7;
-            break;
-        case 3:
-            totalJuegos = 9;
-            break;
-        case 4:
-            totalJuegos = 11;
-            break;
     }
 }
 
 
-int main(int argc, char *argv[]) {
+void createGame() {
+    gtk_widget_hide(windowInitial);
+    inputCantGames = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonGame));
+    createTableHV();
 
-    GtkBuilder *builder;
+    gtk_widget_show_all(windowCreateData);
+}
 
-    gtk_init(&argc, &argv);
-    myCSS();
 
-    builder = gtk_builder_new();
-    gtk_builder_add_from_file(builder, "glade/deportivas.glade", NULL);
+void execGame() {
+    gtk_widget_hide(windowCreateData);
 
-    //Inicialización de widgets
-    window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
+    inputPH = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePH));
+    inputPV = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePV));
 
-    gtk_builder_connect_signals(builder, NULL);
-
-    g_object_unref(builder);
-
-    gtk_widget_show(window);
-    gtk_main();
-
-    return 0;
+    createTable();
+    gtk_widget_show_all(windowFinal);
 }
 
 void myCSS(void) {
@@ -619,4 +317,58 @@ void myCSS(void) {
 // called when window is closed
 void on_window_main_destroy() {
     gtk_main_quit();
+}
+
+int main(int argc, char *argv[]) {
+    GtkBuilder *builder;
+
+    gtk_init(&argc, &argv);
+    myCSS();
+
+    builder = gtk_builder_new();
+    gtk_builder_add_from_file(builder, "glade/deportivas.glade", NULL);
+
+    windowInitial = GTK_WIDGET(gtk_builder_get_object(myBuilder, "window_series"));
+    windowCreateData = GTK_WIDGET(gtk_builder_get_object(myBuilder, "window_create_data_series"));
+    windowFinal = GTK_WIDGET(gtk_builder_get_object(myBuilder, "window_final_series"));
+
+    spinButtonGame = GTK_WIDGET(gtk_builder_get_object(myBuilder, "spinButtonGame"));
+    gtk_spin_button_set_range(GTK_SPIN_BUTTON(spinButtonGame), 1, 99);
+    gtk_spin_button_set_increments(GTK_SPIN_BUTTON(spinButtonGame), 2, 3);
+
+    spinButtonGamePH = GTK_WIDGET(gtk_builder_get_object(myBuilder, "spinButtonGamePH"));
+    gtk_spin_button_set_range(GTK_SPIN_BUTTON(spinButtonGamePH), 0, 1);
+    gtk_spin_button_set_increments(GTK_SPIN_BUTTON(spinButtonGamePH), 0.01, 1);
+
+    spinButtonGamePV = GTK_WIDGET(gtk_builder_get_object(myBuilder, "spinButtonGamePV"));
+    gtk_spin_button_set_range(GTK_SPIN_BUTTON(spinButtonGamePV), 0, 1);
+    gtk_spin_button_set_increments(GTK_SPIN_BUTTON(spinButtonGamePV), 0.01, 1);
+
+    execGameButton = GTK_WIDGET(gtk_builder_get_object(myBuilder, "execute_serie"));
+
+    scrolleGameSerieH = GTK_WIDGET(gtk_builder_get_object(myBuilder, "scrolleGameSerieH"));
+    saveFileButton = GTK_WIDGET(gtk_builder_get_object(myBuilder, "saveFileButton"));
+    filenameEntry = GTK_WIDGET(gtk_builder_get_object(myBuilder, "filenameEntry"));
+
+    scrolledTableSerie = GTK_WIDGET(gtk_builder_get_object(myBuilder, "gtkScrolledWindowTableSerie"));
+    chooseFileButton = GTK_WIDGET(gtk_builder_get_object(myBuilder, "chooseFileButton"));
+    loadFileButton = GTK_WIDGET(gtk_builder_get_object(myBuilder, "loadFileButton"));
+
+    windowSave = GTK_WIDGET(gtk_builder_get_object(myBuilder, "windowSave"));
+
+    labelA = GTK_WIDGET(gtk_builder_get_object(myBuilder, "PH1"));
+    labelB = GTK_WIDGET(gtk_builder_get_object(myBuilder, "PH2"));
+
+    //Inicialización de widgets
+    window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
+
+    gtk_builder_connect_signals(builder, NULL);
+
+    g_object_unref(builder);
+
+    gtk_widget_show_all(windowInitial);
+    gtk_widget_show(window);
+    gtk_main();
+
+    return 0;
 }
