@@ -128,22 +128,31 @@ void createTable() {
     float matrix[juegosAGanar + 1][juegosAGanar + 1];
     casosBase(matrix, juegosAGanar + 1);
     llenarMatriz(matrix, juegosAGanar + 1);
+    GtkStyleContext *context;
 
     gtk_container_add(GTK_CONTAINER(scrolledTableSerie), tableP);
-
-    for (int i = 0; i < juegosAGanar + 1; i++) {
-        for (int j = 0; j < juegosAGanar + 1; j++) {
+    int i, j;
+    for (i = 0; i < juegosAGanar + 1; i++) {
+        for (j = 0; j < juegosAGanar + 1; j++) {
             char number[14];
             sprintf(number, "%.4f", matrix[i][j]);
 
             tableP0[i][j] = gtk_entry_new();
+
+            context = gtk_widget_get_style_context(tableP0[i][j]);
+            gtk_style_context_add_class(context,"cell_res");
+
             gtk_entry_set_text(GTK_ENTRY(tableP0[i][j]), number);
-            gtk_entry_set_width_chars(GTK_ENTRY(tableP0[i][j]), 8);
+            gtk_entry_set_width_chars(GTK_ENTRY(tableP0[i][j]), 6);
             gtk_grid_attach(GTK_GRID(tableP), tableP0[i][j], j, i, 1, 1);
             gtk_widget_set_sensitive(tableP0[i][j], FALSE);
 
         }
     }
+
+    context = gtk_widget_get_style_context(tableP0[juegosAGanar][juegosAGanar]);
+    gtk_style_context_add_class(context,"result");
+
 
     char numberA[14];
     sprintf(numberA, "%.4f", matrix[juegosAGanar][juegosAGanar]);
