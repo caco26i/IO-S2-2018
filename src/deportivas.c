@@ -26,6 +26,7 @@ GtkWidget *filenameEntry;
 GtkWidget *windowSave;
 GtkWidget *labelA;
 GtkWidget *labelB;
+GtkWidget *notebook;
 
 //final
 GtkWidget ***tableP0;
@@ -360,7 +361,7 @@ void leer_archivo() {
 
 
 void createGame() {
-    gtk_widget_hide(windowInitial);
+    //gtk_widget_hide(windowInitial);
     inputCantGames = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonGame));
     createTableHV();
 
@@ -369,13 +370,14 @@ void createGame() {
 
 
 void execGame() {
-    gtk_widget_hide(windowCreateData);
+    //gtk_widget_hide(windowCreateData);
 
     inputPH = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePH));
     inputPV = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePV));
 
     createTable();
-    gtk_widget_show_all(windowFinal);
+    gtk_widget_show_all(scrolledTableSerie);
+    gtk_notebook_next_page (GTK_NOTEBOOK(notebook));
 }
 
 void myCSS(void) {
@@ -440,6 +442,8 @@ int main(int argc, char *argv[]) {
 
     labelA = GTK_WIDGET(gtk_builder_get_object(builder, "PH1"));
     labelB = GTK_WIDGET(gtk_builder_get_object(builder, "PH2"));
+    
+    notebook = GTK_WIDGET(gtk_builder_get_object(builder, "notebookTabs"));
 
     //Inicialización de widgets
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
