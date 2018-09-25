@@ -360,17 +360,13 @@ void leer_archivo() {
 
 
 void createGame() {
-    gtk_widget_hide(windowInitial);
+    //gtk_widget_hide(windowInitial);
     inputCantGames = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonGame));
     createTableHV();
-
-    gtk_widget_show_all(windowCreateData);
 }
 
 
 void execGame() {
-    gtk_widget_hide(windowCreateData);
-
     inputPH = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePH));
     inputPV = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePV));
 
@@ -410,9 +406,7 @@ int main(int argc, char *argv[]) {
     builder = gtk_builder_new();
     gtk_builder_add_from_file(builder, "glade/deportivas.glade", NULL);
 
-    windowInitial = GTK_WIDGET(gtk_builder_get_object(myBuilder, "window_series"));
-    windowCreateData = GTK_WIDGET(gtk_builder_get_object(myBuilder, "window_create_data_series"));
-    windowFinal = GTK_WIDGET(gtk_builder_get_object(myBuilder, "window_final_series"));
+    windowFinal = GTK_WIDGET(gtk_builder_get_object(myBuilder, "window"));
 
     spinButtonGame = GTK_WIDGET(gtk_builder_get_object(myBuilder, "spinButtonGame"));
     gtk_spin_button_set_range(GTK_SPIN_BUTTON(spinButtonGame), 1, 99);
@@ -426,7 +420,7 @@ int main(int argc, char *argv[]) {
     gtk_spin_button_set_range(GTK_SPIN_BUTTON(spinButtonGamePV), 0, 1);
     gtk_spin_button_set_increments(GTK_SPIN_BUTTON(spinButtonGamePV), 0.01, 1);
 
-    execGameButton = GTK_WIDGET(gtk_builder_get_object(myBuilder, "execute_serie"));
+    execGameButton = GTK_WIDGET(gtk_builder_get_object(myBuilder, "execute"));
 
     scrolleGameSerieH = GTK_WIDGET(gtk_builder_get_object(myBuilder, "scrolleGameSerieH"));
     saveFileButton = GTK_WIDGET(gtk_builder_get_object(myBuilder, "saveFileButton"));
