@@ -6,6 +6,7 @@
 
 //Declaración de ventanas
 GtkWidget *window;
+GtkWidget *save;
 
 
 #define gtk_spin_button_get_value_as_float gtk_spin_button_get_value
@@ -91,7 +92,7 @@ void imprimirMatriz(float matrix[juegosAGanar + 1][juegosAGanar + 1]) {
 }
 
 
-void createInfoFile(char *filename) {
+/*void createInfoFile(char *filename) {
     infoFile = fopen(filename, "w+");
     fprintf(infoFile, "%d\n", inputCantGames);
     fprintf(infoFile, "%f\n", inputPH);
@@ -102,7 +103,7 @@ void createInfoFile(char *filename) {
     }
 
     fclose(infoFile);
-}
+}*/
 
 
 void createTable() {
@@ -195,7 +196,48 @@ int loadData(char *filename) {
     return 0;
 }
 
-void saveFile() {
+void generar_archivo() {
+    int i, j;
+
+    GtkWidget *dialog;
+    char *filename = NULL;
+    FILE *fichero;
+    dialog = gtk_file_chooser_dialog_new("Guardar archivo", GTK_WINDOW(window),
+                                         GTK_FILE_CHOOSER_ACTION_SAVE,
+                                         ("Cancelar"), GTK_RESPONSE_CANCEL,
+                                         ("Guardar"), GTK_RESPONSE_ACCEPT, NULL);
+    gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), TRUE);
+    gint answer = gtk_dialog_run(GTK_DIALOG(dialog));
+    if (answer == GTK_RESPONSE_ACCEPT) {
+        filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        fichero = fopen(filename, "w+");
+
+        inputPH = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePH));
+        inputPV = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePV));
+        for (int i = 0; i < inputCantGames; i++) {
+            if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tableHV0[i]))) {
+                juegosCasa[i] = 1;
+            } else {
+                juegosCasa[i] = 0;
+            }
+        }
+
+        fprintf(fichero, "%d\n", inputCantGames);
+        fprintf(fichero, "%f\n", inputPH);
+        fprintf(fichero, "%f\n", inputPV);
+
+        for (int i = 0; i < inputCantGames; i++) {
+            fprintf(fichero, "%d", juegosCasa[i]);
+        }
+
+        fclose(fichero);
+        g_free(filename);
+    }
+    gtk_widget_destroy(dialog);
+    gtk_widget_set_sensitive(save, FALSE);
+}
+
+/*void saveFile() {
     char filename[1000] = "examples/series/";
 
     int len = gtk_entry_get_text_length(GTK_ENTRY(filenameEntry));
@@ -221,7 +263,7 @@ void saveFile() {
 
         gtk_widget_show_all(windowSave);
     }
-}
+}*/
 
 
 void createTableHV1() {
@@ -257,15 +299,55 @@ void createTableHV1() {
     }
 }
 
-int loadFile() {
+void leer_archivo() {
+    int i, j = 0, k, fileSize = 0, entrySize;
+    char *filename = NULL;
+    GtkWidget *dialog;
+    FILE *fichero;
+    //FILE *fichero2;
+
+    char str[1024];
+    //char str2[1024];
+
+    gtk_widget_set_sensitive(save, FALSE);
+    dialog = gtk_file_chooser_dialog_new("Abrir archivo", GTK_WINDOW(window),
+                                         GTK_FILE_CHOOSER_ACTION_OPEN,
+                                         ("Cancelar"), GTK_RESPONSE_CANCEL,
+                                         ("Abrir"), GTK_RESPONSE_ACCEPT, NULL);
+
+    gint answer = gtk_dialog_run(GTK_DIALOG(dialog));
+    if (answer == GTK_RESPONSE_ACCEPT){
+        filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        fichero = fopen(filename, "r");
+        //fichero2 = fopen(filename, "r");
+        //printf("archivo abierto\n");
+
+        int flag = loadData(filename);
+        if (flag == 1) {
+            gtk_widget_hide(windowInitial);
+            createTableHV1();
+
+            gtk_widget_show_all(windowCreateData);
+        }
+        /*entrySize = fileSize;
+        update(entrySize);
+
+        fclose(fichero);
+        fclose(fichero2);*/
+    }
+    gtk_widget_destroy(dialog);
+    //g_free (filename);
+}
+
+/*int loadFile() {
     char *filename;
     filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(chooseFileButton));
     int flag = loadData(filename);
 
     return flag;
-}
+}*/
 
-void createGameFile() {
+/*void createGameFile() {
     if (loadFile() == 1) {
         gtk_widget_hide(windowInitial);
         createTableHV1();
@@ -274,7 +356,7 @@ void createGameFile() {
     } else {
 
     }
-}
+}*/
 
 
 void createGame() {

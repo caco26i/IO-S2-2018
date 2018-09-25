@@ -82,7 +82,6 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="max_length">2</property>
-                        <property name="width_chars">5</property>
                         <property name="text" translatable="yes">11</property>
                         <property name="adjustment">adjustment1</property>
                         <property name="climb_rate">1</property>
@@ -96,7 +95,7 @@
                     <child>
                       <object class="GtkButton">
                         <property name="label" translatable="yes">Cambiar</property>
-                        <property name="width_request">85</property>
+                        <property name="width_request">110</property>
                         <property name="height_request">60</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -105,7 +104,7 @@
                         <property name="margin_bottom">10</property>
                       </object>
                       <packing>
-                        <property name="x">635</property>
+                        <property name="x">630</property>
                       </packing>
                     </child>
                   </object>
@@ -142,7 +141,6 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="margin_bottom">10</property>
-                        <property name="width_chars">5</property>
                         <property name="adjustment">adjustment2</property>
                         <property name="climb_rate">0.01</property>
                         <property name="digits">2</property>
@@ -186,7 +184,6 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="margin_bottom">10</property>
-                        <property name="width_chars">5</property>
                         <property name="adjustment">adjustment3</property>
                         <property name="digits">2</property>
                       </object>
@@ -261,6 +258,36 @@
               </object>
               <packing>
                 <property name="y">100</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="label" translatable="yes">Guardar</property>
+                <property name="width_request">110</property>
+                <property name="height_request">60</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="button-press-event" handler="generar_archivo" swapped="no"/>
+              </object>
+              <packing>
+                <property name="x">490</property>
+                <property name="y">15</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton">
+                <property name="label" translatable="yes">Cargar</property>
+                <property name="width_request">110</property>
+                <property name="height_request">60</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="button-press-event" handler="leer_archivo" swapped="no"/>
+              </object>
+              <packing>
+                <property name="x">630</property>
+                <property name="y">15</property>
               </packing>
             </child>
           </object>
