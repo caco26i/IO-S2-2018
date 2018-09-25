@@ -360,13 +360,8 @@ void leer_archivo() {
 
 
 void createGame() {
-    printf("DEBUG\n\n");
-
     gtk_widget_hide(windowInitial);
     inputCantGames = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonGame));
-    float inputCantGames2 = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePH));
-    float inputCantGames3 = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePV));
-    printf("TEST %d - %f - %f\n\n", inputCantGames, inputCantGames2, inputCantGames3);
     createTableHV();
 
     gtk_widget_show_all(window);
@@ -431,7 +426,7 @@ int main(int argc, char *argv[]) {
     gtk_spin_button_set_range(GTK_SPIN_BUTTON(spinButtonGamePV), 0, 1);
     gtk_spin_button_set_increments(GTK_SPIN_BUTTON(spinButtonGamePV), 0.01, 1);
 
-    execGameButton = GTK_WIDGET(gtk_builder_get_object(builder, "execute_serie"));
+    execGameButton = GTK_WIDGET(gtk_builder_get_object(builder, "execute"));
 
     scrolleGameSerieH = GTK_WIDGET(gtk_builder_get_object(builder, "scrolleGameSerieH"));
     saveFileButton = GTK_WIDGET(gtk_builder_get_object(builder, "saveFileButton"));
