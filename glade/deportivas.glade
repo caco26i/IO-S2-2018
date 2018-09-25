@@ -77,6 +77,7 @@
                     </child>
                     <child>
                       <object class="GtkSpinButton" id="spinButtonGame">
+                        <property name="name">spinButtonGame</property>
                         <property name="width_request">100</property>
                         <property name="height_request">60</property>
                         <property name="visible">True</property>
@@ -102,6 +103,7 @@
                         <property name="receives_default">True</property>
                         <property name="margin_right">10</property>
                         <property name="margin_bottom">10</property>
+                        <signal name="clicked" handler="createGame" swapped="no"/>
                       </object>
                       <packing>
                         <property name="x">630</property>
@@ -231,6 +233,23 @@
                       </object>
                       <packing>
                         <property name="x">15</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow" id="scrolleGameSerieH">
+                        <property name="name">scrolleGameSerieH</property>
+                        <property name="width_request">500</property>
+                        <property name="height_request">100</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="x">160</property>
+                        <property name="y">21</property>
                       </packing>
                     </child>
                   </object>
