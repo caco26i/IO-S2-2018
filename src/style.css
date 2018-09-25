@@ -54,3 +54,11 @@ GtkButton {
 .numero {
     font-size: 18px;
 }
+
+.check{
+    font-family: DejaVu Sans;
+    font-style: normal;
+    /*font-weight: bold;*/
+    font-size: 15px;
+    margin: 10px 0 0 15px;
+}

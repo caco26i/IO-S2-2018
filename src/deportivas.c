@@ -163,8 +163,15 @@ void createTable() {
 
 void createTableHV() {
     tableHV0 = calloc(inputCantGames, sizeof(GtkWidget * ));
-    tableHV = gtk_grid_new();
 
+
+    GList *children, *iter;
+    children = gtk_container_get_children(GTK_CONTAINER(scrolleGameSerieH));
+    for(iter = children; iter != NULL; iter = g_list_next(iter))
+        gtk_widget_destroy(GTK_WIDGET(iter->data));
+    g_list_free(children);
+
+    tableHV = gtk_grid_new();
     gtk_container_add(GTK_CONTAINER(scrolleGameSerieH), tableHV);
 
     char text[14];
@@ -173,10 +180,15 @@ void createTableHV() {
 
     for (int j = 0; j < inputCantGames; j++) {
 
-        strcpy(text, "Game ");
+        strcpy(text, "Juego ");
         sprintf(number, "%d", j + 1);
         strcat(text, number);
         tableHV0[j] = gtk_check_button_new_with_label(text);
+
+        GtkStyleContext *context;
+        context = gtk_widget_get_style_context(tableHV0[j]);
+        gtk_style_context_add_class(context,"check");
+
         gtk_grid_attach(GTK_GRID(tableHV), tableHV0[j], j % 5, j / 5, 1, 1);
         memset(text, '\0', strlen(text));
     }
@@ -268,8 +280,14 @@ void generar_archivo() {
 
 void createTableHV1() {
     tableHV0 = calloc(inputCantGames, sizeof(GtkWidget * ));
-    tableHV = gtk_grid_new();
 
+    GList *children, *iter;
+    children = gtk_container_get_children(GTK_CONTAINER(scrolleGameSerieH));
+    for(iter = children; iter != NULL; iter = g_list_next(iter))
+        gtk_widget_destroy(GTK_WIDGET(iter->data));
+    g_list_free(children);
+
+    tableHV = gtk_grid_new();
     gtk_container_add(GTK_CONTAINER(scrolleGameSerieH), tableHV);
 
     char text[14];
@@ -286,6 +304,11 @@ void createTableHV1() {
         sprintf(number, "%d", j + 1);
         strcat(text, number);
         tableHV0[j] = gtk_check_button_new_with_label(text);
+
+        GtkStyleContext *context;
+        context = gtk_widget_get_style_context(tableHV0[j]);
+        gtk_style_context_add_class(context,"check");
+
         gtk_grid_attach(GTK_GRID(tableHV), tableHV0[j], j % 5, j / 5, 1, 1);
         memset(text, '\0', strlen(text));
     }
@@ -360,11 +383,10 @@ void leer_archivo() {
 
 
 void createGame() {
-    gtk_widget_hide(windowInitial);
     inputCantGames = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonGame));
     createTableHV();
 
-    gtk_widget_show_all(window);
+    gtk_widget_show_all(scrolleGameSerieH);
 }
 
 
@@ -373,6 +395,12 @@ void execGame() {
 
     inputPH = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePH));
     inputPV = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePV));
+
+    GList *children, *iter;
+    children = gtk_container_get_children(GTK_CONTAINER(scrolledTableSerie));
+    for(iter = children; iter != NULL; iter = g_list_next(iter))
+        gtk_widget_destroy(GTK_WIDGET(iter->data));
+    g_list_free(children);
 
     createTable();
     gtk_widget_show_all(windowFinal);

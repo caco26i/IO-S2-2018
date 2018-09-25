@@ -221,24 +221,26 @@
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkLabel">
-                        <property name="width_request">100</property>
+                        <property name="width_request">157</property>
                         <property name="height_request">60</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Serie:</property>
+                        <property name="label" translatable="yes">Formato
+De la Serie:</property>
                         <attributes>
                           <attribute name="font-desc" value="Abyssinica SIL Bold 20"/>
                           <attribute name="foreground" value="#adad7f7fa8a8"/>
                         </attributes>
                       </object>
                       <packing>
-                        <property name="x">15</property>
+                        <property name="x">18</property>
+                        <property name="y">15</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkScrolledWindow" id="scrolleGameSerieH">
                         <property name="name">scrolleGameSerieH</property>
-                        <property name="width_request">500</property>
+                        <property name="width_request">545</property>
                         <property name="height_request">100</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -248,8 +250,8 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="x">160</property>
-                        <property name="y">21</property>
+                        <property name="x">195</property>
+                        <property name="y">6</property>
                       </packing>
                     </child>
                   </object>
