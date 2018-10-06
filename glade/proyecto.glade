@@ -88,14 +88,14 @@ Dinámica</property>
             </attributes>
           </object>
           <packing>
-            <property name="x">95</property>
+            <property name="x">75</property>
             <property name="y">40</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton" id="rutas_cortas">
             <property name="label" translatable="yes">Rutas más Cortas</property>
-            <property name="width_request">200</property>
+            <property name="width_request">225</property>
             <property name="height_request">60</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -106,14 +106,14 @@ Dinámica</property>
             </style>
           </object>
           <packing>
-            <property name="x">145</property>
+            <property name="x">120</property>
             <property name="y">130</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton" id="knapsack">
             <property name="label" translatable="yes">Knapsack</property>
-            <property name="width_request">95</property>
+            <property name="width_request">110</property>
             <property name="height_request">60</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -124,7 +124,7 @@ Dinámica</property>
             </style>
           </object>
           <packing>
-            <property name="x">145</property>
+            <property name="x">120</property>
             <property name="y">200</property>
           </packing>
         </child>
@@ -132,7 +132,7 @@ Dinámica</property>
           <object class="GtkButton" id="deportivas">
             <property name="label" translatable="yes">   Series
 Deportivas</property>
-            <property name="width_request">95</property>
+            <property name="width_request">110</property>
             <property name="height_request">60</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -143,32 +143,33 @@ Deportivas</property>
             </style>
           </object>
           <packing>
-            <property name="x">250</property>
+            <property name="x">235</property>
             <property name="y">200</property>
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="tba3">
-            <property name="label" translatable="yes">TBA</property>
-            <property name="width_request">95</property>
+          <object class="GtkButton" id="equipos">
+            <property name="label" translatable="yes">Reemplazo
+de Equipos</property>
+            <property name="width_request">110</property>
             <property name="height_request">60</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="button-press-event" handler="on_press_pending_open" swapped="no"/>
+            <signal name="button-press-event" handler="on_gear_clicked" swapped="no"/>
             <style>
               <class name="btn"/>
             </style>
           </object>
           <packing>
-            <property name="x">145</property>
+            <property name="x">120</property>
             <property name="y">270</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton" id="tba4">
             <property name="label" translatable="yes">TBA</property>
-            <property name="width_request">95</property>
+            <property name="width_request">110</property>
             <property name="height_request">60</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -179,14 +180,14 @@ Deportivas</property>
             </style>
           </object>
           <packing>
-            <property name="x">250</property>
+            <property name="x">235</property>
             <property name="y">270</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton">
             <property name="label" translatable="yes">Salir del Programa</property>
-            <property name="width_request">200</property>
+            <property name="width_request">220</property>
             <property name="height_request">60</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -194,7 +195,7 @@ Deportivas</property>
             <signal name="button-press-event" handler="on_window_main_destroy" swapped="no"/>
           </object>
           <packing>
-            <property name="x">145</property>
+            <property name="x">120</property>
             <property name="y">370</property>
           </packing>
         </child>

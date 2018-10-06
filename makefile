@@ -4,6 +4,7 @@ TARGET_pending=pending
 TARGET_floyd=floyd
 TARGET_knapsack=knapsack
 TARGET_deportivas=deportivas
+TARGET_equipos=equipos
  
 # compiler
 CC=gcc
@@ -32,10 +33,11 @@ all: $(OBJS)
 	$(CC) -o $(TARGET_floyd) src/$(TARGET_floyd).c $(LDFLAGS)
 	$(CC) -o $(TARGET_knapsack) src/$(TARGET_knapsack).c $(LDFLAGS)
 	$(CC) -o $(TARGET_deportivas) src/$(TARGET_deportivas).c $(LDFLAGS)
+	$(CC) -o $(TARGET_equipos) src/$(TARGET_equipos).c $(LDFLAGS)
     
 main.o: src/main.c
 	$(CC) -c $(CCFLAGS) src/main.c $(GTKLIB) -o main.o
     
 clean:
-	rm -f *.o $(TARGET)	$(TARGET_pending) $(TARGET_floyd) $(TARGET_knapsack) $(TARGET_deportivas)
+	rm -f *.o $(TARGET)	$(TARGET_pending) $(TARGET_floyd) $(TARGET_knapsack) $(TARGET_deportivas) $(TARGET_equipos)
 

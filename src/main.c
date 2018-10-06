@@ -5,9 +5,9 @@
 
 GtkBuilder      *builder;
 //Declaración de ventanas
-GtkWidget      *window, *about_window, *pending_rutas_cortas, *pending_knapsack, *pending_deportivas, *pending_tba3, *pending_tba4;
+GtkWidget      *window, *about_window, *pending_rutas_cortas, *pending_knapsack, *pending_deportivas, *pending_equipos, *pending_tba4;
 //Declaración de botones
-GtkWidget       *rutas_cortas_btn, *knapsack_btn, *deportivas_btn, *tba3_btn, *tba4_btn;
+GtkWidget       *rutas_cortas_btn, *knapsack_btn, *deportivas_btn, *equipos_btn, *tba4_btn;
 //Declaración de tooltips
 GtkWidget       *tt_tba0, *tt_tba1, *tt_tba2, *tt_tba3, *tt_tba4;
 
@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     rutas_cortas_btn = GTK_WIDGET(gtk_builder_get_object(builder, "rutas_cortas"));
     knapsack_btn = GTK_WIDGET(gtk_builder_get_object(builder, "knapsack"));
     deportivas_btn = GTK_WIDGET(gtk_builder_get_object(builder, "deportivas"));
-    tba3_btn = GTK_WIDGET(gtk_builder_get_object(builder, "tba3"));
+    equipos_btn = GTK_WIDGET(gtk_builder_get_object(builder, "equipos"));
     tba4_btn = GTK_WIDGET(gtk_builder_get_object(builder, "tba4"));
 
     //tooltips
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     //Elementos de tooltip
     gtk_widget_set_tooltip_text(tt_tba0, "Algoritmo de análisis sobre grafos para encontrar el camino mínimo en grafos dirigidos ponderados. El algoritmo encuentra el camino entre todos los pares de vértices en una única ejecución");
     gtk_widget_set_tooltip_text(tt_tba1, "Algoritmo que modela una situación análoga al llenar una mochila, incapaz de soportar más de un peso determinado, con todo o parte de un conjunto de objetos, cada uno con un peso y valor específicos. Los objetos colocados en la mochila deben maximizar el valor total sin exceder el peso máximo");
-    gtk_widget_set_tooltip_text(tt_tba2, "Algoritmo que por medio de probabilidades, calcula la probabilidad de cierto equipo de basketball gane una serie de juegos de X cantidad de juegos.");
+    gtk_widget_set_tooltip_text(tt_tba2, "Algoritmo que calcula las probabilidades de que cierto equipo de deportivo gane un juego o una serie de X cantidad de juegos, con las probabilidades de ganar en casa o de visita.");
     gtk_widget_set_tooltip_text(tt_tba3, "Este algoritmo se encuentra en construcción");
     gtk_widget_set_tooltip_text(tt_tba4, "Este algoritmo se encuentra en construcción");
 
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     pending_rutas_cortas = GTK_WIDGET(gtk_builder_get_object(builder, "pending_rutas_cortas"));
     pending_knapsack = GTK_WIDGET(gtk_builder_get_object(builder, "pending_knapsack"));
     pending_deportivas = GTK_WIDGET(gtk_builder_get_object(builder, "pending_deportivas"));
-    pending_tba3 = GTK_WIDGET(gtk_builder_get_object(builder, "pending_tba3"));
+    pending_equipos = GTK_WIDGET(gtk_builder_get_object(builder, "pending_equipos"));
     pending_tba4 = GTK_WIDGET(gtk_builder_get_object(builder, "pending_tba4"));
     gtk_builder_connect_signals(builder, NULL);
 
@@ -98,6 +98,11 @@ void on_knapsack_clicked()
 void on_sports_clicked()
 {
   system("./deportivas &");
+}
+
+void on_gear_clicked()
+{
+  system("./equipos &");
 }
 
 // called when about menu button is clicked

@@ -8,7 +8,6 @@
 GtkWidget *window;
 GtkWidget *save;
 
-
 #define gtk_spin_button_get_value_as_float gtk_spin_button_get_value
 
 GtkBuilder *builder;
@@ -92,26 +91,11 @@ void imprimirMatriz(float matrix[juegosAGanar + 1][juegosAGanar + 1]) {
     }
 }
 
-
-/*void createInfoFile(char *filename) {
-    infoFile = fopen(filename, "w+");
-    fprintf(infoFile, "%d\n", inputCantGames);
-    fprintf(infoFile, "%f\n", inputPH);
-    fprintf(infoFile, "%f\n", inputPV);
-
-    for (int i = 0; i < inputCantGames; i++) {
-        fprintf(infoFile, "%d", juegosCasa[i]);
-    }
-
-    fclose(infoFile);
-}*/
-
-
 void createTable() {
-    tableP0 = calloc(10, sizeof(GtkWidget * *));
+    tableP0 = calloc(100, sizeof(GtkWidget * *));
     tableP = gtk_grid_new();
-    for (int j = 0; j < 10; j++) {
-        tableP0[j] = calloc(10, sizeof(GtkWidget * ));
+    for (int j = 0; j < 100; j++) {
+        tableP0[j] = calloc(100, sizeof(GtkWidget * ));
     }
 
     llenarSeries();
@@ -260,35 +244,6 @@ void generar_archivo() {
     gtk_widget_set_sensitive(save, FALSE);
 }
 
-/*void saveFile() {
-    char filename[1000] = "examples/series/";
-
-    int len = gtk_entry_get_text_length(GTK_ENTRY(filenameEntry));
-    if (len != 0) {
-
-        strcat(filename, gtk_entry_get_text(GTK_ENTRY(filenameEntry)));
-        strcat(filename, ".txt");
-
-
-        inputPH = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePH));
-        inputPV = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(spinButtonGamePV));
-        for (int i = 0; i < inputCantGames; i++) {
-            if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tableHV0[i]))) {
-                juegosCasa[i] = 1;
-            } else {
-                juegosCasa[i] = 0;
-            }
-        }
-
-        createInfoFile(filename);
-
-        gtk_entry_set_text(GTK_ENTRY(filenameEntry), "");
-
-        gtk_widget_show_all(windowSave);
-    }
-}*/
-
-
 void createTableHV1() {
     tableHV0 = calloc(inputCantGames, sizeof(GtkWidget * ));
 
@@ -353,8 +308,6 @@ void leer_archivo() {
     if (answer == GTK_RESPONSE_ACCEPT){
         filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         fichero = fopen(filename, "r");
-        //fichero2 = fopen(filename, "r");
-        //printf("archivo abierto\n");
 
         int flag = loadData(filename);
         if (flag == 1) {
@@ -372,26 +325,6 @@ void leer_archivo() {
     gtk_widget_destroy(dialog);
     //g_free (filename);
 }
-
-/*int loadFile() {
-    char *filename;
-    filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(chooseFileButton));
-    int flag = loadData(filename);
-
-    return flag;
-}*/
-
-/*void createGameFile() {
-    if (loadFile() == 1) {
-        gtk_widget_hide(windowInitial);
-        createTableHV1();
-
-        gtk_widget_show_all(windowCreateData);
-    } else {
-
-    }
-}*/
-
 
 void createGame() {
     inputCantGames = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonGame));
