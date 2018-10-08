@@ -28,7 +28,7 @@
     <property name="default_width">800</property>
     <property name="default_height">500</property>
     <child>
-      <object class="GtkNotebook">
+      <object class="GtkNotebook" id="notebookTabs">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <child>
@@ -365,7 +365,7 @@ mantenimiento</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="calcular">
                             <property name="label" translatable="yes">Calcular</property>
                             <property name="width_request">100</property>
                             <property name="height_request">28</property>
@@ -374,6 +374,7 @@ mantenimiento</property>
                             <property name="receives_default">True</property>
                             <property name="margin_bottom">12</property>
                             <property name="image_position">right</property>
+                            <signal name="clicked" handler="on_calcular_clicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="x">80</property>
@@ -412,9 +413,87 @@ mantenimiento</property>
           <object class="GtkFixed">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_top">15</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="name">320</property>
+                <property name="width_request">500</property>
+                <property name="height_request">60</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Tabla de Analisis G(t)</property>
+                <attributes>
+                  <attribute name="font-desc" value="Abyssinica SIL Bold 20"/>
+                  <attribute name="foreground" value="#adad7f7fa8a8"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="x">160</property>
+                <property name="y">4</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="scrolleSolOptima">
+                <property name="width_request">500</property>
+                <property name="height_request">275</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="margin_bottom">10</property>
+                <property name="shadow_type">in</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="x">162</property>
+                <property name="y">73</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkFixed">
+                <property name="width_request">270</property>
+                <property name="height_request">45</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkButton">
+                    <property name="label" translatable="yes">Salir</property>
+                    <property name="width_request">80</property>
+                    <property name="height_request">30</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="margin_bottom">15</property>
+                  </object>
+                  <packing>
+                    <property name="x">190</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="calcular1">
+                    <property name="label" translatable="yes">Ver Solucion Optima</property>
+                    <property name="width_request">148</property>
+                    <property name="height_request">28</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="margin_bottom">12</property>
+                    <property name="image_position">right</property>
+                  </object>
+                  <packing>
+                    <property name="x">34</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="x">253</property>
+                <property name="y">363</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="position">1</property>
+            <property name="tab_fill">False</property>
           </packing>
         </child>
         <child type="tab">
@@ -432,6 +511,89 @@ mantenimiento</property>
           <object class="GtkFixed">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <child>
+              <object class="GtkFixed">
+                <property name="width_request">100</property>
+                <property name="height_request">80</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_top">15</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="name">320</property>
+                    <property name="width_request">500</property>
+                    <property name="height_request">60</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Tabla de Analisis G(t)</property>
+                    <attributes>
+                      <attribute name="font-desc" value="Abyssinica SIL Bold 20"/>
+                      <attribute name="foreground" value="#adad7f7fa8a8"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="x">160</property>
+                    <property name="y">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFixed">
+                    <property name="width_request">32</property>
+                    <property name="height_request">32</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="label" translatable="yes">Salir</property>
+                        <property name="width_request">80</property>
+                        <property name="height_request">30</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="margin_bottom">15</property>
+                      </object>
+                      <packing>
+                        <property name="x">190</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="calcular2">
+                        <property name="label" translatable="yes">Ver Solucion Optima</property>
+                        <property name="width_request">148</property>
+                        <property name="height_request">28</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="margin_bottom">12</property>
+                        <property name="image_position">right</property>
+                      </object>
+                      <packing>
+                        <property name="x">34</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="x">253</property>
+                    <property name="y">363</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkGrid" id="frame">
+                    <property name="width_request">500</property>
+                    <property name="height_request">275</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="x">162</property>
+                    <property name="y">73</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">2</property>
