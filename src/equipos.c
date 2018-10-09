@@ -95,7 +95,7 @@ int loadData(char *filename) {
 
 
         int i = 0;
-        while(!feof(infoFile)) {
+        while (!feof(infoFile)) {
             fscanf(infoFile, "%d;%d;", &tableDataFile[i][0], &tableDataFile[i][1]);
             i++;
         }
@@ -270,7 +270,7 @@ void createFinalTableData(int timeLimit, FinalTable finalData[timeLimit + 1]) {
             tableData[row][column] = gtk_entry_new();
 
             context = gtk_widget_get_style_context(tableData[row][column]);
-            gtk_style_context_add_class(context,"cell_res");
+            gtk_style_context_add_class(context, "cell_res");
 
             gtk_entry_set_width_chars(GTK_ENTRY(tableData[row][column]), 10);
             gtk_widget_set_sensitive(tableData[row][column], FALSE);
@@ -326,18 +326,17 @@ void createFinalTableData(int timeLimit, FinalTable finalData[timeLimit + 1]) {
     gtk_widget_show_all(g_scrolledwindow_finalTable);
 }
 
-int repeat (plans planesPosibles[300],int indice){
+int repeat(plans planesPosibles[300], int indice) {
     int result = 0;
     int coincidencia = 0;
-    if (indice > 0){
-        for (int i=0;i<indice;i++){
-            if (planesPosibles[i].position == planesPosibles[indice].position){
-                for (int x =0;x<planesPosibles[indice].position;x++){
-                    if (planesPosibles[indice].year[x] == planesPosibles[i].year[x]){
+    if (indice > 0) {
+        for (int i = 0; i < indice; i++) {
+            if (planesPosibles[i].position == planesPosibles[indice].position) {
+                for (int x = 0; x < planesPosibles[indice].position; x++) {
+                    if (planesPosibles[indice].year[x] == planesPosibles[i].year[x]) {
                         result = 1;
-                        coincidencia ++;
-                    }
-                    else{
+                        coincidencia++;
+                    } else {
                         result = 0;
                         coincidencia = 0;
                     }
@@ -346,10 +345,9 @@ int repeat (plans planesPosibles[300],int indice){
         }
     }
 
-    if (result == 1 && coincidencia==planesPosibles[indice].position+1){
+    if (result == 1 && coincidencia == planesPosibles[indice].position + 1) {
         return 1;
-    }
-    else{
+    } else {
         return 0;
     }
 }
@@ -371,21 +369,21 @@ void createOptimalSolution(plans planesPosibles[300]) {
     fichero = fopen("test.dot", "w+");
     fputs("digraph G {\n", fichero);
 
-    for (int i =0; i < cont_plans;i++){
+    for (int i = 0; i < cont_plans; i++) {
         plans aux = planesPosibles[i];
-        if (repeat(planesPosibles,i) ==0) {
-            for (int x = 0;x<=aux.position;x++) {
+        if (repeat(planesPosibles, i) == 0) {
+            for (int x = 0; x <= aux.position; x++) {
                 fprintf(fichero, "%d", aux.year[x]);
 
-                if (x<aux.position){
+                if (x < aux.position) {
                     fprintf(fichero, " -> ");
-                }
-                else{
+                } else {
                     int R = rand() % 255;
                     int G = rand() % 255;
                     int B = rand() % 255;
 
-                    fprintf(fichero, " [fillcolor = \"#%x%x%x\", color = \"#%x%x%x\"]\n", R, G, B, R, G, B); // modified to append string
+                    fprintf(fichero, " [fillcolor = \"#%x%x%x\", color = \"#%x%x%x\"]\n", R, G, B, R, G,
+                            B); // modified to append string
 
                 }
             }
@@ -398,15 +396,15 @@ void createOptimalSolution(plans planesPosibles[300]) {
 
     generar_imagen_grafo();
 
-    GtkWidget *g_lblSolution = gtk_label_new (text);
-    gtk_container_add (GTK_CONTAINER (g_scrolledwindow_optimalSolution), g_lblSolution);
-    gtk_widget_set_name(g_lblSolution,"label");
+    GtkWidget *g_lblSolution = gtk_label_new(text);
+    gtk_container_add(GTK_CONTAINER(g_scrolledwindow_optimalSolution), g_lblSolution);
+    gtk_widget_set_name(g_lblSolution, "label");
 
     gtk_widget_show_all(windowFinalTable);
-    memset(text,'\0',strlen(text));
+    memset(text, '\0', strlen(text));
 }
 
-void mostrar_respuesta(FinalTable finalData[timeLimit+1],plans planesPosibles[300],int cont_plans){
+void mostrar_respuesta(FinalTable finalData[timeLimit + 1], plans planesPosibles[300], int cont_plans) {
     int stop = 0;
     int contador = 0;
 
@@ -415,30 +413,29 @@ void mostrar_respuesta(FinalTable finalData[timeLimit+1],plans planesPosibles[30
     planes.year[0] = 0;
 
     FinalTable answer = finalData[contador];
-    while(stop==0){
-        if (answer.position==0){
+    while (stop == 0) {
+        if (answer.position == 0) {
             stop = 1;
-        }
-        else{
-            planes.position = planes.position +1;
-            planes.year[planes.position] = answer.year[answer.position-1];
+        } else {
+            planes.position = planes.position + 1;
+            planes.year[planes.position] = answer.year[answer.position - 1];
 
-            answer = finalData[answer.year[answer.position-1]];
+            answer = finalData[answer.year[answer.position - 1]];
         }
     }
     planesPosibles[contado_x] = planes;
-    cont_plans ++;
-    contado_x ++;
+    cont_plans++;
+    contado_x++;
 }
 
-void planes(FinalTable G[timeLimit+1],plans planesPosibles[300],int cont_plans){
-    for (int i=0;i<=timeLimit;i++){
-        if (G[i].position > 1){
-            for (int x = G[i].position;x>=1;x--){
-                mostrar_respuesta(G,planesPosibles, cont_plans);
+void planes(FinalTable G[timeLimit + 1], plans planesPosibles[300], int cont_plans) {
+    for (int i = 0; i <= timeLimit; i++) {
+        if (G[i].position > 1) {
+            for (int x = G[i].position; x >= 1; x--) {
+                mostrar_respuesta(G, planesPosibles, cont_plans);
                 G[i].position = G[i].position - 1;
 
-                if (G[i].position == 0){
+                if (G[i].position == 0) {
                     G[i].position = 1;
                 }
 
@@ -448,14 +445,14 @@ void planes(FinalTable G[timeLimit+1],plans planesPosibles[300],int cont_plans){
     cont_plans = contado_x;
 }
 
-void replaceAlgorithm(InitialTable initialData[totalUsefulLife], FinalTable finalData[timeLimit+1]) {
+void replaceAlgorithm(InitialTable initialData[totalUsefulLife], FinalTable finalData[timeLimit + 1]) {
 
     int cost[totalUsefulLife];
     int mantain = 0;
 
     for (int year = 0; year < totalUsefulLife; year++) {
         InitialTable matrizYear = initialData[year];
-        for (int rango=0; rango <=year; rango++) {
+        for (int rango = 0; rango <= year; rango++) {
             InitialTable matrizRango = initialData[rango];
             mantain = mantain + matrizRango.maintenance;
         }
@@ -463,7 +460,7 @@ void replaceAlgorithm(InitialTable initialData[totalUsefulLife], FinalTable fina
         mantain = 0;
     }
 
-    for (int i = timeLimit;i>=0;i--){
+    for (int i = timeLimit; i >= 0; i--) {
         int min = 0;
         int flag = 0;
         candidate options[totalUsefulLife];
@@ -471,37 +468,36 @@ void replaceAlgorithm(InitialTable initialData[totalUsefulLife], FinalTable fina
         posibilites.value = 0;
         posibilites.year = i;
         FinalTable answer;
-        for (int x = i+1;x<=timeLimit;x++){
-            if (flag < totalUsefulLife){
-                posibilites.value = cost[(x-i)-1] + finalData[x].value;
+        for (int x = i + 1; x <= timeLimit; x++) {
+            if (flag < totalUsefulLife) {
+                posibilites.value = cost[(x - i) - 1] + finalData[x].value;
                 posibilites.year = x;
                 options[flag] = posibilites;
-                flag ++;
+                flag++;
             }
         }
 
 
-        if (flag == 0){
+        if (flag == 0) {
             answer.value = posibilites.value;
             answer.year[0] = posibilites.year;
             answer.position = 0;
             answer.profit = initialCost;
         }
-        for (int i = 0;i<flag;i++){
+        for (int i = 0; i < flag; i++) {
             candidate aux;
             aux = options[i];
-            if (i==0){
+            if (i == 0) {
                 min = aux.value;
                 answer.year[0] = aux.year;
                 answer.position = 1;
-            }
-            else{
-                if (aux.value == min){
+            } else {
+                if (aux.value == min) {
                     answer.year[answer.position] = aux.year;
-                    answer.position ++;
+                    answer.position++;
                 }
 
-                if (aux.value<min){
+                if (aux.value < min) {
                     answer.year[0] = aux.year;
                     answer.position = 1;
                     min = aux.value;
@@ -516,40 +512,43 @@ void replaceAlgorithm(InitialTable initialData[totalUsefulLife], FinalTable fina
 }
 
 void createObjects() {
-    initialData = calloc(usefulLife,sizeof(InitialTable));
-    for (int row = 1; row < usefulLife;row ++)
-    {
+    initialData = calloc(usefulLife, sizeof(InitialTable));
+    for (int row = 1; row < usefulLife; row++) {
         InitialTable data;
         data.year = atoi(gtk_entry_get_text(GTK_ENTRY(tableData[row][0])));
         data.sale = atoi(gtk_entry_get_text(GTK_ENTRY(tableData[row][1])));
         data.maintenance = atoi(gtk_entry_get_text(GTK_ENTRY(tableData[row][2])));
-        initialData[row-1] = data;
+        initialData[row - 1] = data;
     }
 }
 
 void on_calcular_clicked() {
-    int initialCost = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spinButtonInitialCost));
-    timeLimit = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spinButtonTimeLimit));
+    int initialCost = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonInitialCost));
+    timeLimit = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonTimeLimit));
 
-    setTotalObjectsCount(usefulLife-1, initialCost, timeLimit);
+    setTotalObjectsCount(usefulLife - 1, initialCost, timeLimit);
     createObjects();
 
-    FinalTable *finalData = calloc (timeLimit+1,sizeof(FinalTable));
-    replaceAlgorithm(initialData,finalData);
+    FinalTable *finalData = calloc(timeLimit + 1, sizeof(FinalTable));
+    replaceAlgorithm(initialData, finalData);
     free(initialData);
-    createFinalTableData(timeLimit,finalData);
-    planes(finalData,planesPosibles,cont_plans);
+    createFinalTableData(timeLimit, finalData);
+    planes(finalData, planesPosibles, cont_plans);
     cont_plans = contado_x;
     createOptimalSolution(planesPosibles);
 
-    gtk_notebook_next_page (GTK_NOTEBOOK(notebook));
+    gtk_notebook_next_page(GTK_NOTEBOOK(notebook));
     free(finalData);
+}
+
+void on_solOptima_clicked() {
+    gtk_notebook_next_page(GTK_NOTEBOOK(notebook));
 }
 
 void on_cambiar_clicked() {
     usefulLife = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonLife)) + 1;
-    timeLimit = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spinButtonTimeLimit));
-    initialCost = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON(spinButtonInitialCost));
+    timeLimit = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonTimeLimit));
+    initialCost = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonInitialCost));
     createTableData();
 }
 
@@ -593,8 +592,8 @@ int main(int argc, char *argv[]) {
 
     notebook = GTK_WIDGET(gtk_builder_get_object(builder, "notebookTabs"));
 
-    g_scrolledwindow_initialTableData   = GTK_WIDGET(gtk_builder_get_object(builder, "scrolleInitialData"));
-    g_scrolledwindow_finalTable         = GTK_WIDGET(gtk_builder_get_object(builder, "scrolleSolOptima"));
+    g_scrolledwindow_initialTableData = GTK_WIDGET(gtk_builder_get_object(builder, "scrolleInitialData"));
+    g_scrolledwindow_finalTable = GTK_WIDGET(gtk_builder_get_object(builder, "scrolleSolOptima"));
 
     //Inicialización de widgets
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));

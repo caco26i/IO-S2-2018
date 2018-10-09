@@ -471,7 +471,7 @@ mantenimiento</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="calcular1">
+                  <object class="GtkButton" id="solOptima">
                     <property name="label" translatable="yes">Ver Solución Óptima</property>
                     <property name="width_request">148</property>
                     <property name="height_request">28</property>
@@ -480,6 +480,7 @@ mantenimiento</property>
                     <property name="receives_default">True</property>
                     <property name="margin_bottom">12</property>
                     <property name="image_position">right</property>
+                    <signal name="clicked" handler="on_solOptima_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="x">34</property>
@@ -526,7 +527,7 @@ mantenimiento</property>
                     <property name="height_request">60</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Tabla de Análisis G(t)</property>
+                    <property name="label" translatable="yes">Grafo Solución Optima</property>
                     <attributes>
                       <attribute name="font-desc" value="Abyssinica SIL Bold 20"/>
                       <attribute name="foreground" value="#adad7f7fa8a8"/>
@@ -555,22 +556,7 @@ mantenimiento</property>
                         <signal name="button-press-event" handler="on_window_main_destroy" swapped="no"/>
                       </object>
                       <packing>
-                        <property name="x">190</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="calcular2">
-                        <property name="label" translatable="yes">Ver Solución Óptima</property>
-                        <property name="width_request">148</property>
-                        <property name="height_request">28</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="margin_bottom">12</property>
-                        <property name="image_position">right</property>
-                      </object>
-                      <packing>
-                        <property name="x">34</property>
+                        <property name="x">118</property>
                       </packing>
                     </child>
                   </object>
@@ -581,6 +567,7 @@ mantenimiento</property>
                 </child>
                 <child>
                   <object class="GtkGrid" id="frame">
+                    <property name="name">frame</property>
                     <property name="width_request">500</property>
                     <property name="height_request">275</property>
                     <property name="visible">True</property>
