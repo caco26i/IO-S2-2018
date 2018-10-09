@@ -1,2 +1,7 @@
 digraph G {
+0 -> 3 -> 6 [fillcolor = "#1413e9", color = "#1413e9"]
+0 -> 3 -> 6 -> 8 -> 10 [fillcolor = "#e22d51", color = "#e22d51"]
+0 -> 2 -> 4 -> 7 -> 10 [fillcolor = "#8e1f56", color = "#8e1f56"]
+0 -> 3 -> 6 -> 9 -> 12 -> 15 -> 17 [fillcolor = "#85727", color = "#85727"]
+0 -> 2 -> 5 -> 8 -> 11 -> 14 -> 17 [fillcolor = "#a75d4", color = "#a75d4"]
 }

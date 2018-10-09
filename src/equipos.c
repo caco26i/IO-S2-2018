@@ -327,29 +327,23 @@ void createFinalTableData(int timeLimit, FinalTable finalData[timeLimit + 1]) {
 }
 
 int repeat(plans planesPosibles[300], int indice) {
-    int result = 0;
     int coincidencia = 0;
-    if (indice > 0) {
         for (int i = 0; i < indice; i++) {
             if (planesPosibles[i].position == planesPosibles[indice].position) {
                 for (int x = 0; x < planesPosibles[indice].position; x++) {
                     if (planesPosibles[indice].year[x] == planesPosibles[i].year[x]) {
-                        result = 1;
                         coincidencia++;
                     } else {
-                        result = 0;
                         coincidencia = 0;
+                        continue;
                     }
                 }
+
+                if (coincidencia > 0) return coincidencia;
             }
         }
-    }
 
-    if (result == 1 && coincidencia == planesPosibles[indice].position + 1) {
-        return 1;
-    } else {
-        return 0;
-    }
+    return coincidencia;
 }
 
 void generar_imagen_grafo() {
@@ -390,7 +384,6 @@ void createOptimalSolution(plans planesPosibles[300]) {
         }
     }
     fprintf(fichero, "}");
-
 
     fclose(fichero);
 
