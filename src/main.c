@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     gtk_widget_set_tooltip_text(tt_tba0, "Algoritmo de análisis sobre grafos para encontrar el camino mínimo en grafos dirigidos ponderados. El algoritmo encuentra el camino entre todos los pares de vértices en una única ejecución");
     gtk_widget_set_tooltip_text(tt_tba1, "Algoritmo que modela una situación análoga al llenar una mochila, incapaz de soportar más de un peso determinado, con todo o parte de un conjunto de objetos, cada uno con un peso y valor específicos. Los objetos colocados en la mochila deben maximizar el valor total sin exceder el peso máximo");
     gtk_widget_set_tooltip_text(tt_tba2, "Algoritmo que calcula las probabilidades de que cierto equipo de deportivo gane un juego o una serie de X cantidad de juegos, con las probabilidades de ganar en casa o de visita.");
-    gtk_widget_set_tooltip_text(tt_tba3, "Este algoritmo se encuentra en construcción");
+    gtk_widget_set_tooltip_text(tt_tba3, "El empleo del análisis de reemplazo de equipo nos muestra una categoría de decisiones de inversión que implica considerar el gasto necesario para reemplazar equipo desgastado u obsoleto por tecnología moderna o equipos nuevos, que permitan mejorar la eficiencia de la producción y elevar el índice de productividad.");
     gtk_widget_set_tooltip_text(tt_tba4, "Este algoritmo se encuentra en construcción");
 
     about_window = GTK_WIDGET(gtk_builder_get_object(builder, "about_window"));
