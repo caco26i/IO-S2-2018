@@ -47,6 +47,8 @@ int Amount;
 int timeLimitEquipment;
 
 FILE *fileTableData;
+FILE *infoFile;
+
 
 typedef struct {
     int year[31];
@@ -84,45 +86,26 @@ void setTotalObjectsCount(int pTotalUsefulLife, int pInitialCost, int pTimeLimit
     timeLimit = pTimeLimit;
 }
 
+int loadData(char *filename) {
+    infoFile = fopen(filename, "r");
+    if (infoFile != NULL) {
+        fscanf(infoFile, "%d", &initialCost);
+        fscanf(infoFile, "%d", &timeLimit);
+        fscanf(infoFile, "%d", &usefulLife);
 
-void leer_archivo() {
-    int i, j = 0, k, fileSize = 0, entrySize;
 
-    char *filename = NULL;
-    GtkWidget *dialog;
-    FILE *fichero;
-    //FILE *fichero2;
-
-    char str[1024];
-    //char str2[1024];
-
-    gtk_widget_set_sensitive(save, FALSE);
-    dialog = gtk_file_chooser_dialog_new("Abrir archivo", GTK_WINDOW(window),
-                                         GTK_FILE_CHOOSER_ACTION_OPEN,
-                                         ("Cancelar"), GTK_RESPONSE_CANCEL,
-                                         ("Abrir"), GTK_RESPONSE_ACCEPT, NULL);
-
-    gint answer = gtk_dialog_run(GTK_DIALOG(dialog));
-    if (answer == GTK_RESPONSE_ACCEPT) {
-        filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-        fichero = fopen(filename, "r");
-
-        /*int flag = loadData(filename);
-        if (flag == 1) {
-            gtk_widget_hide(windowInitial);
-            createTableHV1();
-
-            gtk_widget_show_all(scrolleInitialData);
+        int i = 0;
+        while(!feof(infoFile)) {
+            fscanf(infoFile, "%d;%d;", &tableDataFile[i][0], &tableDataFile[i][1]);
+            i++;
         }
-        /*entrySize = fileSize;
-        update(entrySize);
 
-        fclose(fichero);
-        fclose(fichero2);*/
+        fclose(infoFile);
+        return 1;
     }
-    gtk_widget_destroy(dialog);
-    //g_free (filename);
+    return 0;
 }
+
 
 void createTableData() {
     char str[10];
@@ -188,6 +171,42 @@ void createTableData() {
         }
     }
     gtk_widget_show_all(g_scrolledwindow_initialTableData);
+}
+
+void leer_archivo() {
+    int i, j = 0, k, fileSize = 0, entrySize;
+
+    char *filename = NULL;
+    GtkWidget *dialog;
+    FILE *fichero;
+
+    char str[1024];
+    //char str2[1024];
+
+    gtk_widget_set_sensitive(save, FALSE);
+    dialog = gtk_file_chooser_dialog_new("Abrir archivo", GTK_WINDOW(window),
+                                         GTK_FILE_CHOOSER_ACTION_OPEN,
+                                         ("Cancelar"), GTK_RESPONSE_CANCEL,
+                                         ("Abrir"), GTK_RESPONSE_ACCEPT, NULL);
+
+    gint answer = gtk_dialog_run(GTK_DIALOG(dialog));
+    if (answer == GTK_RESPONSE_ACCEPT) {
+        filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        fichero = fopen(filename, "r");
+
+        int flag = loadData(filename);
+        if (flag == 1) {
+            gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinButtonInitialCost), initialCost);
+            gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinButtonLife), usefulLife++);
+            gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinButtonTimeLimit), timeLimit);
+
+            createTableData();
+        }
+
+        fclose(fichero);
+    }
+    gtk_widget_destroy(dialog);
+    //g_free (filename);
 }
 
 void generar_archivo() {
@@ -339,7 +358,6 @@ void generar_imagen_grafo() {
     const gchar *style_file = "src/style.css";
     gtk_css_provider_load_from_file(provider, g_file_new_for_path(style_file), 0);
 }
-
 
 void createOptimalSolution(plans planesPosibles[300]) {
     char text[1000];
