@@ -208,12 +208,14 @@ void generar_archivo() {
 
         int inputAmount = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonInitialCost));
         int inputTimeLimit = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonTimeLimit));
+        int inputLife = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(spinButtonLife));
 
         fprintf(fichero, "%d\n", inputAmount);
         fprintf(fichero, "%d\n", inputTimeLimit);
+        fprintf(fichero, "%d\n", inputLife);
 
         for (int row = 1; row < usefulLife; row++) {
-            for (int column = 0; column < 3; column++) {
+            for (int column = 1; column < 3; column++) {
                 fprintf(fichero, "%s;", (gtk_entry_get_text(GTK_ENTRY(tableData[row][column]))));
             }
             fprintf(fichero, "\n");
